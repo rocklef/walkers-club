@@ -96,9 +96,6 @@ public class MainActivity extends Activity {
         Uri out = FilesProvider.uri(cameraFile.getName());
         Intent cam = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cam.putExtra(MediaStore.EXTRA_OUTPUT, out);
-        cam.putExtra("android.intent.extras.CAMERA_FACING", 1);
-        cam.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
-        cam.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
         cam.setClipData(ClipData.newRawUri("photo", out));
         cam.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivityForResult(cam, REQ_CAMERA);
@@ -187,6 +184,20 @@ public class MainActivity extends Activity {
             send.putExtra(Intent.EXTRA_SUBJECT, "Walkers Welfare Club members 2026-27");
             send.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             runOnUiThread(() -> startActivity(Intent.createChooser(send, "Share member list")));
+        }
+
+        /** Shares a binary file (e.g. the Excel export) sent from the page as base64. */
+        @JavascriptInterface
+        public void shareFile(String fileName, String base64) throws IOException {
+            File f = FilesProvider.file(MainActivity.this, fileName);
+            try (OutputStream out = new FileOutputStream(f)) { out.write(android.util.Base64.decode(base64, android.util.Base64.DEFAULT)); }
+            Intent send = new Intent(Intent.ACTION_SEND);
+            send.setType(FilesProvider.mime(fileName));
+            send.putExtra(Intent.EXTRA_STREAM, FilesProvider.uri(f.getName()));
+            send.putExtra(Intent.EXTRA_SUBJECT, "Walkers Welfare Club members 2026-27");
+            send.setClipData(ClipData.newRawUri(fileName, FilesProvider.uri(f.getName())));
+            send.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            runOnUiThread(() -> startActivity(Intent.createChooser(send, "Share " + fileName)));
         }
 
         @JavascriptInterface

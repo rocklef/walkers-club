@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.walkersclub.chengalpattu"
-    android:versionCode="2"
-    android:versionName="1.1">
+    android:versionCode="3"
+    android:versionName="1.2">
 
     <!-- targetSdk 34 keeps classic (non edge-to-edge) layout so the coloured status bar works on Android 15 -->
     <uses-sdk android:minSdkVersion="24" android:targetSdkVersion="34" />
@@ -12,6 +12,7 @@
         <intent><action android:name="android.media.action.IMAGE_CAPTURE" /></intent>
         <intent><action android:name="android.intent.action.GET_CONTENT" /><data android:mimeType="image/*" /></intent>
         <intent><action android:name="android.intent.action.SEND" /><data android:mimeType="text/csv" /></intent>
+        <intent><action android:name="android.intent.action.SEND" /><data android:mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" /></intent>
     </queries>
 
     <application

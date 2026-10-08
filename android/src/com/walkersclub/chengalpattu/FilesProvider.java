@@ -32,11 +32,15 @@ public class FilesProvider extends ContentProvider {
         return ParcelFileDescriptor.open(file(getContext(), uri.getLastPathSegment()), ParcelFileDescriptor.parseMode(mode));
     }
 
-    @Override
-    public String getType(Uri uri) {
-        String n = String.valueOf(uri.getLastPathSegment());
-        return n.endsWith(".csv") ? "text/csv" : n.endsWith(".jpg") ? "image/jpeg" : "application/octet-stream";
+    static String mime(String n) {
+        if (n.endsWith(".xlsx")) return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        if (n.endsWith(".csv")) return "text/csv";
+        if (n.endsWith(".jpg")) return "image/jpeg";
+        return "application/octet-stream";
     }
+
+    @Override
+    public String getType(Uri uri) { return mime(String.valueOf(uri.getLastPathSegment())); }
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] args, String sortOrder) {

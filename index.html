@@ -231,26 +231,31 @@ body[data-s="1"] .err::before, body[data-s="2"] .err::before{color:var(--red)}
 .m-search:focus-within{box-shadow:inset 0 0 0 1.5px var(--lime)}
 .m-search svg{width:18px; height:18px; color:var(--sub); flex:0 0 auto}
 .m-search input{flex:1; min-width:0; background:transparent !important; border:0 !important; box-shadow:none !important; padding:12px 0 !important; min-height:46px !important; color:#fff !important; font-weight:600}
-.m-filters{display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; margin-inline:-2px; padding:2px}
-.m-filters::-webkit-scrollbar{display:none}
+.m-filters{display:flex; flex-wrap:wrap; gap:6px}
 .m-f{flex:0 0 auto; border:0; background:rgba(255,255,255,.07); color:var(--sub); padding:7px 12px; border-radius:99px; font-weight:700; font-size:.78rem}
 .m-f[aria-pressed="true"]{background:var(--lime); color:var(--ink)}
 .mlist{display:flex; flex-direction:column; gap:6px}
 .mrow{background:rgba(255,255,255,.04); border-radius:18px; overflow:hidden; transition:background .2s}
 .mrow[open]{background:rgba(255,255,255,.07)}
-.mrow summary{display:grid; grid-template-columns:46px 1fr auto; gap:12px; align-items:center; padding:10px; cursor:pointer; list-style:none}
+.mrow summary{display:grid; grid-template-columns:46px 1fr 18px; gap:12px; align-items:center; padding:10px 12px 10px 10px; cursor:pointer; list-style:none}
+.mrow .chev{width:18px; height:18px; color:var(--sub); transition:rotate .25s}
+.mrow[open] .chev{rotate:180deg}
 .mrow summary::-webkit-details-marker{display:none}
 .av{width:46px; height:46px; border-radius:14px; overflow:hidden; background:var(--lime); color:var(--ink); display:grid; place-items:center; font-family:var(--f-giant); font-size:1.25rem}
 .av img{width:100%; height:100%; object-fit:cover}
 .who{min-width:0}
-.who b{display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
-.who span{display:block; font-size:.78rem; color:var(--sub); font-variant-numeric:tabular-nums; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
-.m-tags{display:flex; gap:4px; align-items:center}
+.who b{display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; line-height:1.25; overflow-wrap:anywhere}
+.who > span{display:block; font-size:.8rem; color:var(--sub); font-variant-numeric:tabular-nums; margin-top:2px}
+.m-tags{display:flex; flex-wrap:wrap; gap:4px; align-items:center; margin-top:6px}
+.kt small{font-family:var(--f-ui); font-weight:700; font-size:.62rem; letter-spacing:.04em; text-transform:uppercase; color:var(--sub); margin-right:1px}
+.m-tags em{font-style:normal; font-size:.72rem; font-weight:600; color:var(--sub); margin-left:2px}
 .bp{font-family:var(--f-giant); font-size:.95rem; padding:2px 9px; border-radius:99px; background:var(--blood); color:#fff}
 .kt{font-family:var(--f-giant); font-size:.85rem; padding:2px 7px; border-radius:8px; background:rgba(255,255,255,.1); color:var(--lime)}
-.mrow dl{margin:0; padding:2px 14px 4px 68px; display:grid; grid-template-columns:96px 1fr; gap:6px 10px; font-size:.86rem}
+.mrow dl{margin:0 12px; padding:12px 2px 4px; border-top:1px solid var(--line); display:grid; grid-template-columns:minmax(88px, 34%) 1fr; gap:8px 12px; font-size:.86rem; line-height:1.35}
 .mrow dt{color:var(--sub)} .mrow dd{margin:0; overflow-wrap:anywhere}
-.m-rowact{display:flex; gap:6px; padding:10px 14px 14px 68px; flex-wrap:wrap}
+.m-rowact{display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:10px 12px 12px}
+.m-rowact .m-mini{justify-content:center; padding:10px 8px; border-radius:12px}
+.m-rowact .m-edit{grid-column:1 / -1; background:var(--lime); color:var(--ink)}
 .empty{display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px; padding:22px 12px; color:var(--sub)}
 .empty b{color:#fff}
 
@@ -319,6 +324,11 @@ body[data-s="intro"] .screen{padding-bottom:0}
 
 .card-actions{display:flex; gap:10px; flex-wrap:wrap}
 .ghost.solid{background:var(--ink); color:var(--lime); border-color:var(--ink)}
+
+.actions{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+.actions button{display:inline-flex; align-items:center; justify-content:center; gap:8px; border:0; border-radius:16px; min-height:52px; padding:10px 12px; font-weight:800; font-size:.95rem; background:var(--lime); color:var(--ink)}
+.actions button.alt{background:rgba(255,255,255,.1); color:#fff}
+.actions button svg{width:20px; height:20px; flex:0 0 auto}
 
 /* assets */
 .art.has-sticker{position:relative}
@@ -657,9 +667,9 @@ body[data-s="intro"] .screen{padding-bottom:0}
         <span class="vf-ok" id="vf-ok" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Looks good</span>
       </label>
       <input type="file" id="photo" class="vh" accept="image/jpeg,image/png,image/webp">
-      <input type="file" id="photo-cam" class="vh" accept="image/*" capture="user">
+      <input type="file" id="photo-cam" class="vh" accept="image/*" capture="environment">
       <div class="vf-actions">
-        <label class="vf-btn primary" for="photo-cam"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.6l1.3-2h5.2l1.3 2h1.6A2.5 2.5 0 0 1 20 8.5v8A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12.5" r="3.4" fill="none" stroke="currentColor" stroke-width="2"/></svg> Take selfie</label>
+        <label class="vf-btn primary" for="photo-cam"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.6l1.3-2h5.2l1.3 2h1.6A2.5 2.5 0 0 1 20 8.5v8A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12.5" r="3.4" fill="none" stroke="currentColor" stroke-width="2"/></svg> Take photo</label>
         <label class="vf-btn" for="photo"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="10" r="1.8" fill="currentColor"/><path d="M4.5 17.5l5-5 3.5 3.5 2.5-2.5 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg> <span id="drop-t">Gallery</span></label>
       </div>
       <span class="hint" id="drop-h">JPG, PNG or WebP · up to 10 MB · <span lang="ta">புகைப்படம்</span></span>
@@ -729,11 +739,14 @@ body[data-s="intro"] .screen{padding-bottom:0}
         <button type="button" class="m-f" data-f="all" aria-pressed="true">All</button>
         <button type="button" class="m-f" data-f="week" aria-pressed="false">This week</button>
         <button type="button" class="m-f" data-f="nophoto" aria-pressed="false">No photo</button>
-        <button type="button" class="m-f" data-f="neg" aria-pressed="false">Rh negative</button>
       </div>
       <div class="mlist" id="mlist"></div>
     </div>
-    <div class="actions m-export"><button type="button" id="dl-csv"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg> Download CSV</button><button type="button" class="alt" id="copy-csv"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="2"/></svg> Copy for Excel</button></div>
+    <div class="panel m-export">
+      <div class="panel-h"><b>Export members</b></div>
+      <p class="hint" id="export-hint" style="margin:-6px 0 0; line-height:1.4">Excel opens with columns sized and the header row frozen. CSV works in any spreadsheet app.</p>
+      <div class="actions"><button type="button" id="dl-xlsx"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4" width="17" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 9.5h17M3.5 14.5h17M9.5 9.5v10.5" fill="none" stroke="currentColor" stroke-width="2"/></svg> Excel file</button><button type="button" class="alt" id="dl-csv"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h8l4.5 4.5v12.5H6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M14 3.5V8h4.5M9 13h6M9 16.5h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg> CSV file</button></div>
+    </div>
   </section>
 </div>
 </div><!-- /scroller -->
@@ -1217,11 +1230,10 @@ function renderMembers(){
   let list = members.filter(m => !q || [m.name,m.father,m.cell,m.address,m.email].join(" ").toLowerCase().includes(q));
   if (memFilter === "week") list = list.filter(m => Date.parse(m.createdAt) > wk);
   if (memFilter === "nophoto") list = list.filter(m => !m.photo);
-  if (memFilter === "neg") list = list.filter(m => (m.blood || "").endsWith("−"));
   list = [...list].sort(memSort === "az" ? (a, b) => (a.name || "").localeCompare(b.name || "") : (a, b) => (Date.parse(b.createdAt) || 0) - (Date.parse(a.createdAt) || 0));
-  $("mlist").innerHTML = list.map(m => `<details class="mrow" data-id="${esc(m.id)}"><summary><div class="av">${m.photo ? `<img alt="" src="${m.photo}">` : esc((m.name||"?").replace(/^([A-Z]\.\s*)+/i,"")[0] || "?")}</div><div class="who"><b>${esc(m.name)}</b><span>${fmtCell(m.cell)} · ${ago(m.createdAt)}</span></div><span class="m-tags"><span class="bp">${esc(m.blood)}</span><span class="kt">${esc(m.tee)}</span></span></summary>
-    <dl><dt>Father's name</dt><dd>${esc(m.father)}</dd><dt>Born</dt><dd>${fmtDate(m.dob)}${ageOf(m.dob) != null ? ` · ${ageOf(m.dob)} yrs` : ""}</dd><dt>Marriage</dt><dd>${m.single ? "Not married" : fmtDate(m.dom)}</dd><dt>Mail ID</dt><dd>${esc(m.email)}</dd><dt>Address</dt><dd>${esc(m.address)}</dd><dt>Kit</dt><dd>T-shirt ${esc(m.tee)} · Lower ${esc(m.lower)}</dd><dt>Registered</dt><dd>${fmtDate((m.createdAt||"").slice(0,10))}</dd></dl>
-    <div class="m-rowact"><button type="button" class="m-mini" data-copy="phone">${ICOPY} Copy phone</button><button type="button" class="m-mini" data-copy="all">${ICOPY} Copy details</button>${NATIVE ? '<button type="button" class="m-mini" data-edit="1">✎ Edit</button>' : ""}</div></details>`).join("") || `<div class="empty">No member matches${q ? ` “${esc(q)}”` : " this filter"}.</div>`;
+  $("mlist").innerHTML = list.map(m => `<details class="mrow" data-id="${esc(m.id)}"><summary><div class="av">${m.photo ? `<img alt="" src="${m.photo}">` : esc((m.name||"?").replace(/^([A-Z]\.\s*)+/i,"")[0] || "?")}</div><div class="who"><b>${esc(m.name)}</b><span>${fmtCell(m.cell)}</span><span class="m-tags"><span class="bp">${esc(m.blood)}</span><span class="kt"><small>Tee</small> ${esc(m.tee)}</span><span class="kt"><small>Lower</small> ${esc(m.lower)}</span><em>${ago(m.createdAt)}</em></span></div><svg class="chev" viewBox="0 0 20 20" aria-hidden="true"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+    <dl><dt>Father's name</dt><dd>${esc(m.father)}</dd><dt>Born</dt><dd>${fmtDate(m.dob)}${ageOf(m.dob) != null ? ` · ${ageOf(m.dob)} yrs` : ""}</dd><dt>Marriage</dt><dd>${m.single ? "Not married" : fmtDate(m.dom)}</dd><dt>Mail ID</dt><dd>${esc(m.email)}</dd><dt>Address</dt><dd>${esc(m.address)}</dd><dt>T-shirt</dt><dd>${esc(m.tee)}</dd><dt>Lower</dt><dd>${esc(m.lower)}</dd><dt>Registered</dt><dd>${fmtDate((m.createdAt||"").slice(0,10))}</dd></dl>
+    <div class="m-rowact"><button type="button" class="m-mini" data-copy="phone">${ICOPY} Copy phone</button><button type="button" class="m-mini" data-copy="all">${ICOPY} Copy all</button>${NATIVE ? '<button type="button" class="m-mini m-edit" data-edit="1">✎ Edit details</button>' : ""}</div></details>`).join("") || `<div class="empty">No member matches${q ? ` “${esc(q)}”` : " this filter"}.</div>`;
   $("mlist").querySelectorAll("[data-edit]").forEach(b => b.onclick = () => {
     const m = members.find(x => x.id === b.closest(".mrow").dataset.id); if (!m) return;
     saved = m; fillForm(m); try { localStorage.setItem(CURRENT_KEY, m.id); } catch(e){}
@@ -1243,16 +1255,75 @@ function csv(){
   return [cols.map(c => cell(c[0])).join(",")].concat(members.map(m => cols.map(([,k]) =>
     cell(k === "photo" ? (m.photo ? "Yes" : "No") : k === "dom" && m.single ? "Not married" : k === "createdAt" ? (m.createdAt||"").slice(0,10) : m[k])).join(","))).join("\r\n");
 }
-$("dl-csv").onclick = async () => {
-  if (NATIVE){ try { NATIVE.share("walkers-club-members-2026-27.csv", "\uFEFF" + csv()); } catch(e){ toast("Couldn't prepare the file."); } return; }
+// ---------- Excel (.xlsx) export: SpreadsheetML in a stored zip, no library ----------
+const CRC_T = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++){ let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+function crc32(b){ let c = 0xFFFFFFFF; for (let i = 0; i < b.length; i++) c = CRC_T[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+function zipStore(files){
+  const enc = new TextEncoder(), parts = [], central = []; let off = 0;
+  const DATE = (46 << 9) | (1 << 5) | 1;   // 1 Jan 2026
+  for (const f of files){
+    const nm = enc.encode(f.name), d = typeof f.data === "string" ? enc.encode(f.data) : f.data, crc = crc32(d);
+    const h = new DataView(new ArrayBuffer(30));
+    h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true); h.setUint16(12, DATE, true);
+    h.setUint32(14, crc, true); h.setUint32(18, d.length, true); h.setUint32(22, d.length, true); h.setUint16(26, nm.length, true);
+    parts.push(new Uint8Array(h.buffer), nm, d);
+    const c = new DataView(new ArrayBuffer(46));
+    c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint16(8, 0x0800, true); c.setUint16(14, DATE, true);
+    c.setUint32(16, crc, true); c.setUint32(20, d.length, true); c.setUint32(24, d.length, true); c.setUint16(28, nm.length, true); c.setUint32(42, off, true);
+    central.push(new Uint8Array(c.buffer), nm);
+    off += 30 + nm.length + d.length;
+  }
+  const size = central.reduce((a, b) => a + b.length, 0), e = new DataView(new ArrayBuffer(22));
+  e.setUint32(0, 0x06054b50, true); e.setUint16(8, files.length, true); e.setUint16(10, files.length, true); e.setUint32(12, size, true); e.setUint32(16, off, true);
+  return new Blob([...parts, ...central, new Uint8Array(e.buffer)], {type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+}
+const xmlEsc = v => String(v ?? "").replace(/[<>&"]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c])).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "");
+const colRef = i => { let r = ""; i++; while (i){ const m = (i - 1) % 26; r = String.fromCharCode(65 + m) + r; i = Math.floor((i - 1) / 26); } return r; };
+function sheetXml(rows, widths){
+  const cols = `<cols>${widths.map((w, i) => `<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join("")}</cols>`;
+  const data = rows.map((r, ri) => `<row r="${ri+1}">${r.map((v, ci) => {
+    const ref = colRef(ci) + (ri + 1), st = ri === 0 ? ' s="1"' : "";
+    return typeof v === "number" ? `<c r="${ref}"${st}><v>${v}</v></c>` : `<c r="${ref}" t="inlineStr"${st}><is><t xml:space="preserve">${xmlEsc(v)}</t></is></c>`;
+  }).join("")}</row>`).join("");
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>${cols}<sheetData>${data}</sheetData></worksheet>`;
+}
+function xlsxBlob(){
+  const dateOrBlank = d => d ? fmtDate(d) : "";
+  const people = [...members].sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+  const memberRows = [["Name","Father's name","Address","Cell number","Date of birth","Age","Date of marriage","Mail ID","Blood group","T-shirt size","Lower size","Photo","Registered on"]]
+    .concat(people.map(m => [m.name || "", m.father || "", m.address || "", m.cell ? fmtCell(m.cell) : "", dateOrBlank(m.dob), ageOf(m.dob) ?? "",
+      m.single ? "Not married" : dateOrBlank(m.dom), m.email || "", m.blood || "", m.tee || "", m.lower || "", m.photo ? "Yes" : "No", dateOrBlank((m.createdAt || "").slice(0, 10))]));
+  const kitRows = [["Size","T-shirts","Lowers"]].concat(TEE.map(([k]) => [k, members.filter(m => m.tee === k).length, members.filter(m => m.lower === k).length]), [["Total", members.filter(m => m.tee).length, members.filter(m => m.lower).length]]);
+  const bloodRows = [["Blood group","Members"]].concat(["A+","A−","B+","B−","O+","O−","AB+","AB−"].map(b => [b, members.filter(m => m.blood === b).length]));
+  const NS = 'xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"', R = 'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"';
+  const names = ["Members", "Kit order", "Blood groups"];
+  return zipStore([
+    {name:"[Content_Types].xml", data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>${names.map((_, i) => `<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join("")}</Types>`},
+    {name:"_rels/.rels", data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>`},
+    {name:"xl/workbook.xml", data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook ${NS} ${R}><sheets>${names.map((n, i) => `<sheet name="${n}" sheetId="${i+1}" r:id="rId${i+1}"/>`).join("")}</sheets></workbook>`},
+    {name:"xl/_rels/workbook.xml.rels", data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${names.map((_, i) => `<Relationship Id="rId${i+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join("")}<Relationship Id="rId${names.length+1}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>`},
+    {name:"xl/styles.xml", data:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet ${NS}><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FFD9EE57"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`},
+    {name:"xl/worksheets/sheet1.xml", data:sheetXml(memberRows, [28,24,42,18,14,6,16,32,12,12,11,8,15])},
+    {name:"xl/worksheets/sheet2.xml", data:sheetXml(kitRows, [10,12,12])},
+    {name:"xl/worksheets/sheet3.xml", data:sheetXml(bloodRows, [14,12])}
+  ]);
+}
+const EXPORT_NAME = "walkers-club-members-2026-27";
+async function exportFile(kind){
+  if (!members.length) return toast("No members to export yet.");
+  const blob = kind === "xlsx" ? xlsxBlob() : new Blob(["\uFEFF" + csv()], {type:"text/csv"});
+  const filename = `${EXPORT_NAME}.${kind}`;
+  if (NATIVE){
+    const b64 = await new Promise(res => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.readAsDataURL(blob); });
+    try { NATIVE.shareFile(filename, b64); } catch(e){ toast("Couldn't prepare the file."); }
+    return;
+  }
   const dl = window.claude?.use ? await claude.use("downloads") : null;
-  if (!dl) return toast("Download isn't available here. Use Copy for Excel.");
-  try { await dl.save({filename:"walkers-club-members-2026-27.csv", data:"﻿" + csv()}); } catch(e){ if (e?.code !== "declined") toast("Couldn't prepare the file."); }
-};
-$("copy-csv").onclick = () => {
-  if (NATIVE) return copyText(csv().replace(/","/g, '"\t"'), "Copied. Paste into Excel or Google Sheets.");
-  navigator.clipboard.writeText(csv().replace(/","/g, '"\t"')).then(() => toast("Copied. Paste into Excel or Google Sheets."), () => toast("Copy isn't allowed here. Use Download CSV."));
-};
+  if (!dl) return toast("Download isn't available here.");
+  try { await dl.save({filename, data:blob}); } catch(e){ if (e?.code !== "declined") toast("Couldn't prepare the file."); }
+}
+$("dl-xlsx").onclick = () => exportFile("xlsx");
+$("dl-csv").onclick = () => exportFile("csv");
 
 // ---------- phone app (Android APK) mode ----------
 const NATIVE = window.WWCNative || null;
@@ -1282,7 +1353,8 @@ function startNewMember(){
 }
 if (NATIVE){
   try { members = JSON.parse(NATIVE.load() || "[]"); } catch(e){ members = []; }
-  isAdmin = true; $("tab-mem").hidden = false; $("new-member").hidden = false;
+  isAdmin = true; $("tab-mem").hidden = false;
+  $("export-hint").textContent = "Each button opens the share sheet, so you can send the file to WhatsApp, Gmail or Drive."; $("new-member").hidden = false;
   $("new-member").onclick = startNewMember;
   let cur = null; try { cur = localStorage.getItem(CURRENT_KEY); } catch(e){}
   const mine = members.find(m => m.id === cur);
