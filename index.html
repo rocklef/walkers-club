@@ -1,0 +1,1314 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Walkers Welfare Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Figtree:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Mukta+Malar:wght@500;600&display=swap">
+<style>
+/* Layout: one screen at a time, each a full-bleed flat colour (cobalt, red, mustard, lime, night, white) with a giant condensed headline,
+   one big cut-paper illustration, white pill CTA and a tinted tab bar docked at the bottom. Deliberately single-look (no dark variant). */
+:root{
+  color-scheme: light;
+  --cobalt:#1C3FD8; --red:#D52A1E; --mustard:#E9A61C; --lime:#D9EE57; --night:#14203A; --paper:#FFFFFF; --coal:#101512;
+  --ink:#0E1A13; --cream:#FFF4DC; --leaf:#1F5E3A; --blood:#E2402D;
+  --f-giant:"Anton", "Oswald", Impact, "Arial Narrow", sans-serif;
+  --f-ui:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-serif:"Instrument Serif", Georgia, serif;
+  --f-ta:"Mukta Malar", "Nirmala UI", "Latha", sans-serif;
+  /* per-screen (set by body[data-s]) */
+  --bg:var(--cobalt); --fg:#fff; --sub:rgba(255,255,255,.72); --line:rgba(255,255,255,.28);
+  --chip:rgba(255,255,255,.14); --chip-on:#fff; --chip-on-fg:var(--ink); --cta:#fff; --cta-fg:var(--ink); --dock:rgba(0,0,0,.18); --field:#fff; --field-fg:var(--ink);
+}
+body[data-s="intro"],body[data-s="3"]{--bg:var(--cobalt)}
+body[data-s="0"]{--bg:var(--red)}
+body[data-s="1"]{--bg:var(--mustard); --fg:var(--ink); --sub:rgba(14,26,19,.72); --line:rgba(14,26,19,.25); --chip:rgba(255,255,255,.35); --chip-on:var(--ink); --chip-on-fg:#fff; --dock:rgba(14,26,19,.10)}
+body[data-s="2"],body[data-s="done"]{--bg:var(--lime); --fg:var(--ink); --sub:rgba(14,26,19,.7); --line:rgba(14,26,19,.22); --chip:rgba(255,255,255,.55); --chip-on:var(--ink); --chip-on-fg:var(--lime); --dock:rgba(14,26,19,.08)}
+body[data-s="4"]{--bg:var(--night); --dock:rgba(255,255,255,.08)}
+body[data-s="5"]{--bg:var(--paper); --fg:var(--ink); --sub:#5E6A62; --line:#E3E7E1; --cta:var(--ink); --cta-fg:#fff; --dock:#F1F3EE}
+body[data-s="members"]{--bg:var(--coal); --sub:rgba(255,255,255,.6); --line:rgba(255,255,255,.12); --chip:rgba(255,255,255,.08); --chip-on:var(--lime); --chip-on-fg:var(--ink); --dock:rgba(255,255,255,.07); --field:#1C221E; --field-fg:#fff}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{min-height:100%}
+body{overflow-x:hidden; margin:0; background:var(--bg); color:var(--fg); font-family:var(--f-ui); font-size:16px; line-height:1.45; transition:background-color .5s ease, color .3s; -webkit-font-smoothing:antialiased}
+button{font:inherit; color:inherit; cursor:pointer}
+:focus-visible{outline:3px solid currentColor; outline-offset:3px; border-radius:12px}
+.screen{max-width:460px; margin:0 auto; padding-inline:20px; padding-block:10px 190px; display:flex; flex-direction:column; gap:18px}
+[lang="ta"]{font-family:var(--f-ta)}
+[data-view]{display:flex; flex-direction:column; gap:18px}
+#form{display:contents}
+
+/* top bar */
+.top{display:flex; justify-content:space-between; align-items:center; gap:12px; min-height:44px}
+.top-l{font-weight:600; font-size:.88rem; color:var(--sub); font-variant-numeric:tabular-nums}
+.top-l b{color:var(--fg); font-weight:700}
+.roundbtn{width:44px; height:44px; flex:0 0 44px; border-radius:50%; border:0; background:var(--chip); display:grid; place-items:center}
+.roundbtn svg{width:20px; height:20px}
+.segs{display:grid; grid-template-columns:repeat(6,1fr); gap:5px}
+.segs i{height:4px; border-radius:4px; background:var(--line); transition:background .4s; transform-origin:left center}
+.segs i.on{background:var(--fg)}
+
+/* type */
+.kicker{font-family:var(--f-giant); font-size:1.05rem; letter-spacing:.02em; text-transform:uppercase; line-height:1}
+.giant{font-family:var(--f-giant); font-weight:400; text-transform:uppercase; line-height:1.02; letter-spacing:.012em; word-spacing:.04em; margin:0; font-size:clamp(3.6rem, 19vw, 5.6rem); text-wrap:balance}
+.giant small{font-size:.42em; letter-spacing:.01em}
+.serif{font-family:var(--f-serif); font-style:italic; font-weight:400}
+.lede{margin:0; color:var(--sub); font-size:1rem; max-width:34ch}
+.lede strong{color:var(--fg)}
+
+/* art */
+.art{margin-inline:-20px; display:block}
+.art svg{display:block; width:100%; height:auto; max-width:100%}
+
+/* fields */
+.fields{display:flex; flex-direction:column; gap:14px}
+.field{display:flex; flex-direction:column; gap:6px}
+.label{display:flex; justify-content:space-between; align-items:baseline; gap:8px; font-weight:700; font-size:.92rem}
+.label .ta{font-weight:500; font-size:.8rem; color:var(--sub)}
+input[type=text],input[type=tel],input[type=email],input[type=date],input[type=search],textarea{
+  width:100%; font:inherit; font-weight:600; color:var(--field-fg); background:var(--field); border:2px solid transparent; border-radius:18px; padding:14px 16px; min-height:56px; box-shadow:0 2px 0 rgba(0,0,0,.08)}
+textarea{min-height:100px; resize:vertical}
+input::placeholder,textarea::placeholder{color:#9AA39C; font-weight:500}
+input:focus,textarea:focus{outline:none; border-color:var(--ink)}
+input:disabled{opacity:.5}
+.field.bad input,.field.bad textarea{border-color:#FFD23F; box-shadow:0 0 0 3px rgba(255,210,63,.45)}
+body[data-s="1"] .field.bad input, body[data-s="1"] .field.bad textarea, body[data-s="2"] .field.bad input, body[data-s="5"] .field.bad input{border-color:var(--red); box-shadow:none}
+.err{font-size:.85rem; font-weight:700}
+.err:empty{display:none}
+.err::before{content:"● "; color:#FFD23F}
+body[data-s="1"] .err::before, body[data-s="2"] .err::before{color:var(--red)}
+.prefix{display:flex; gap:8px}
+.prefix span{display:grid; place-items:center; padding:0 14px; border-radius:18px; background:var(--chip); font-weight:800; font-variant-numeric:tabular-nums}
+.prefix input{font-variant-numeric:tabular-nums; letter-spacing:.05em}
+.toggle{display:inline-flex; align-items:center; gap:10px; font-weight:600; font-size:.92rem; cursor:pointer; align-self:flex-start}
+.toggle input{width:22px; height:22px; accent-color:var(--ink)}
+
+.chips{display:grid; grid-template-columns:repeat(4,1fr); gap:8px}
+.chips.six{grid-template-columns:repeat(6,1fr); gap:6px}
+.chip{border:0; background:var(--chip); color:var(--fg); border-radius:16px; padding:12px 2px; font-family:var(--f-giant); font-size:1.35rem; line-height:1; transition:transform .18s cubic-bezier(.3,1.6,.5,1), background .2s, color .2s; font-variant-numeric:tabular-nums}
+.chip small{display:block; font-family:var(--f-ui); font-weight:600; font-size:.62rem; margin-top:4px; opacity:.75; letter-spacing:0}
+.chip[aria-pressed="true"]{background:var(--chip-on); color:var(--chip-on-fg); transform:translateY(-3px) scale(1.04)}
+
+/* blood big readout */
+.readout{display:flex; align-items:flex-end; justify-content:space-between; gap:12px}
+.readout .stat b{display:block; font-family:var(--f-giant); font-size:2rem; line-height:1}
+.readout .stat span{font-size:.78rem; color:var(--sub); font-weight:600}
+
+/* kit */
+
+
+/* photo */
+.vh{position:absolute; width:1px; height:1px; opacity:0; pointer-events:none}
+.vf{position:relative; display:block; width:min(100%, 272px); aspect-ratio:1; margin:14px auto 6px; border-radius:30px; cursor:pointer;
+  background:radial-gradient(circle at 50% 30%, #2D4177, #17244A 72%); box-shadow:inset 0 0 0 1px rgba(255,255,255,.08), 0 26px 44px -26px rgba(0,0,0,.8); transition:transform .25s}
+.vf:hover{transform:scale(1.015)}
+.vf.over{outline:3px dashed #fff; outline-offset:6px}
+.vf-in{position:absolute; inset:16px; border-radius:20px; overflow:hidden; display:grid; place-items:center}
+.vf-guide{position:absolute; bottom:-4px; width:84%; height:auto}
+.vf-hint{position:absolute; top:14px; font-size:.7rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; opacity:.6}
+.vf-in img{width:100%; height:100%; object-fit:cover}
+.vf-c{position:absolute; width:36px; height:36px; border:4px solid var(--lime); transition:border-color .3s}
+.vf-c.tl{top:0; left:0; border-right:0; border-bottom:0; border-radius:30px 0 0 0}
+.vf-c.tr{top:0; right:0; border-left:0; border-bottom:0; border-radius:0 30px 0 0}
+.vf-c.bl{bottom:0; left:0; border-right:0; border-top:0; border-radius:0 0 0 30px}
+.vf-c.br{bottom:0; right:0; border-left:0; border-top:0; border-radius:0 0 30px 0}
+.vf-scan{position:absolute; left:22px; right:22px; top:20px; height:2px; border-radius:2px; background:linear-gradient(90deg, transparent, var(--lime), transparent);
+  box-shadow:0 0 14px 2px rgba(217,238,87,.6); animation:scan 2.4s ease-in-out infinite alternate}
+@keyframes scan{to{top:calc(100% - 22px)}}
+.vf.has-photo .vf-scan,.vf.has-photo .vf-hint{display:none}
+.vf.has-photo .vf-c{border-color:#fff}
+.vf-tag{position:absolute; z-index:2; top:-12px; left:50%; translate:-50% 0; white-space:nowrap; background:var(--red); color:#fff; font-weight:800; font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; padding:6px 12px; border-radius:99px; box-shadow:0 8px 16px -8px rgba(0,0,0,.6)}
+.vf-ok{position:absolute; z-index:2; bottom:-14px; left:50%; translate:-50% 0; white-space:nowrap; display:inline-flex; align-items:center; gap:6px; background:var(--lime); color:var(--ink); font-weight:800; font-size:.82rem; padding:7px 14px; border-radius:99px; box-shadow:0 10px 18px -10px rgba(0,0,0,.7)}
+.vf-ok svg{width:14px; height:14px}
+.vf-actions{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px}
+.vf-btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; min-height:52px; border-radius:16px; font-weight:800; font-size:.98rem; cursor:pointer;
+  background:rgba(255,255,255,.08); color:#fff; box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.22); transition:transform .15s, background .2s}
+.vf-btn:active{transform:scale(.97)}
+.vf-btn.primary{background:var(--lime); color:var(--ink); box-shadow:0 12px 22px -14px var(--lime)}
+.vf-btn svg{width:21px; height:21px}
+#photo:focus-visible ~ .vf-actions label[for="photo"], #photo-cam:focus-visible ~ .vf-actions label[for="photo-cam"]{outline:3px solid #fff; outline-offset:3px}
+.hint{font-size:.85rem; color:var(--sub)}
+#f-photo .hint{display:block; text-align:center; font-size:.82rem; color:var(--sub); margin-top:4px}
+.tips{list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:8px; justify-content:center}
+.tips li{display:inline-flex; align-items:center; gap:6px; padding:7px 12px; border-radius:99px; background:rgba(255,255,255,.08); font-size:.8rem; font-weight:700}
+.tips svg{width:13px; height:13px; color:var(--lime)}
+
+/* review */
+.rv{display:flex; flex-direction:column; gap:10px}
+.rv-hero{display:grid; grid-template-columns:72px 1fr auto; gap:14px; align-items:center; padding:14px; border-radius:24px; background:var(--cobalt); color:#fff; position:relative; overflow:hidden; box-shadow:0 18px 30px -20px rgba(28,63,216,.8)}
+.rv-hero::after{content:""; position:absolute; inset:0; background:radial-gradient(rgba(255,255,255,.09) 1.2px, transparent 1.4px) 0 0/14px 14px; pointer-events:none}
+.rv-ph{width:72px; height:84px; border-radius:16px; overflow:hidden; background:rgba(255,255,255,.15); border:3px solid var(--lime); padding:0; cursor:pointer; display:grid; place-items:center; position:relative; z-index:1}
+.rv-ph img{width:100%; height:100%; object-fit:cover}
+.rv-who{min-width:0; position:relative; z-index:1}
+.rv-who small{display:block; font-size:.66rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; opacity:.7}
+.rv-who b{display:block; font-family:var(--f-giant); font-weight:400; font-size:1.45rem; line-height:1.05; text-transform:uppercase; overflow-wrap:anywhere; margin-top:2px}
+.rv-who span{display:block; font-size:.82rem; opacity:.85; font-weight:600; margin-top:3px; font-variant-numeric:tabular-nums}
+.rv-ring{position:relative; z-index:1; width:58px; height:58px; display:grid; place-items:center}
+.rv-ring svg{position:absolute; inset:0; width:100%; height:100%; rotate:-90deg}
+.rv-ring b{font-family:var(--f-giant); font-weight:400; font-size:1rem; line-height:1}
+.rv-ring small{display:block; font-size:.5rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; opacity:.7; text-align:center}
+.rv-g{border-radius:20px; background:#F4F6F1; padding:12px 14px 14px; display:flex; flex-direction:column; gap:10px}
+.rv-g header{display:flex; align-items:center; gap:10px}
+.rv-ic{width:32px; height:32px; border-radius:10px; display:grid; place-items:center; flex:0 0 auto}
+.rv-ic svg{width:17px; height:17px}
+.rv-g header b{flex:1; font-size:.98rem}
+.rv-g header button{border:0; background:#fff; border-radius:99px; padding:6px 14px; font-weight:800; font-size:.8rem; box-shadow:0 1px 0 rgba(0,0,0,.08), inset 0 0 0 1px var(--line); display:inline-flex; align-items:center; gap:5px}
+.rv-g header button svg{width:12px; height:12px}
+.rv-g dl{margin:0; display:grid; grid-template-columns:1fr 1fr; gap:10px 14px}
+.rv-g dl div{min-width:0}
+.rv-g dl div.wide{grid-column:1 / -1}
+.rv-g dt{font-size:.72rem; color:var(--sub); font-weight:700}
+.rv-g dd{margin:1px 0 0; font-weight:700; overflow-wrap:anywhere; line-height:1.3}
+.rv-pill{display:inline-flex; align-items:center; gap:5px; background:var(--blood); color:#fff; padding:2px 10px 2px 8px; border-radius:99px; font-family:var(--f-giant); font-weight:400; font-size:1rem}
+.rv-pill svg{width:10px; height:13px}
+.rv-pill svg path{fill:#fff}
+.rv-size{display:inline-block; min-width:38px; text-align:center; background:var(--ink); color:var(--lime); padding:2px 8px; border-radius:8px; font-family:var(--f-giant); font-weight:400; font-size:1rem}
+.rv-confirm{display:flex; gap:12px; align-items:flex-start; padding:14px; border-radius:18px; background:var(--cream); font-weight:600; font-size:.9rem; line-height:1.4; cursor:pointer}
+.rv-confirm input{position:absolute; opacity:0; width:1px; height:1px}
+.rv-box{flex:0 0 26px; height:26px; border-radius:8px; border:2px solid var(--ink); display:grid; place-items:center; color:transparent; background:#fff; transition:background .2s, color .2s, transform .2s}
+.rv-box svg{width:16px; height:16px}
+.rv-confirm input:checked + .rv-box{background:var(--ink); color:var(--lime); transform:scale(1.06)}
+.rv-confirm input:focus-visible + .rv-box{outline:3px solid var(--cobalt); outline-offset:2px}
+#f-confirm.bad .rv-confirm{box-shadow:inset 0 0 0 2px var(--red)}
+
+/* member card */
+.idcard{position:relative; border-radius:28px; overflow:hidden; background:var(--cobalt); color:#fff; padding:20px; display:flex; flex-direction:column; gap:16px; box-shadow:0 30px 50px -28px rgba(14,26,19,.6)}
+.idcard .ttl{display:flex; justify-content:space-between; gap:10px; align-items:flex-start}
+.idcard .club{font-family:var(--f-giant); font-size:1.15rem; text-transform:uppercase; line-height:1}
+.idcard .club span{display:block; font-family:var(--f-ta); text-transform:none; font-size:.78rem; opacity:.8; margin-top:4px}
+.idno{font-weight:800; font-size:.8rem; background:var(--lime); color:var(--ink); padding:4px 10px; border-radius:99px; white-space:nowrap; font-variant-numeric:tabular-nums}
+.idbody{display:grid; grid-template-columns:104px 1fr; gap:16px; align-items:end}
+.idphoto{position:relative; width:104px; height:128px; border-radius:20px; overflow:hidden; background:rgba(255,255,255,.15)}
+.idphoto img{width:100%; height:100%; object-fit:cover}
+.idname{font-family:var(--f-giant); text-transform:uppercase; font-size:1.9rem; line-height:.92; overflow-wrap:anywhere}
+.idgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; border-top:1px solid rgba(255,255,255,.25); padding-top:14px}
+.idgrid b{display:block; font-family:var(--f-giant); font-size:1.6rem; line-height:1}
+.idgrid span{font-size:.72rem; opacity:.75; font-weight:600}
+.idcard .shoe{position:absolute; right:-30px; top:46px; width:170px; opacity:.16; pointer-events:none}
+.note{font-size:.88rem; font-weight:600; background:rgba(255,255,255,.55); border-radius:16px; padding:12px 14px}
+.ghost{border:2px solid var(--fg); background:transparent; border-radius:99px; padding:12px 18px; font-weight:700; align-self:flex-start}
+
+/* members */
+.m-hero{display:grid; grid-template-columns:1fr auto; align-items:end; gap:12px}
+.m-count{font-family:var(--f-giant); font-size:clamp(4.6rem, 26vw, 6.6rem); line-height:.95; font-variant-numeric:tabular-nums}
+.m-label{font-size:.78rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--sub); margin-top:4px}
+.m-spark{display:flex; flex-direction:column; align-items:flex-end; gap:4px; padding-bottom:6px}
+.m-spark svg{width:140px; height:56px; overflow:visible}
+.m-spark span{font-size:.66rem; font-weight:700; color:var(--sub); letter-spacing:.06em; text-transform:uppercase}
+.m-stats{display:grid; grid-template-columns:repeat(3,1fr); gap:8px}
+.m-stat{background:#1A201C; border-radius:18px; padding:12px; display:flex; flex-direction:column; gap:2px; min-width:0}
+.m-stat b{font-family:var(--f-giant); font-weight:400; font-size:1.55rem; line-height:1.05; color:var(--lime); font-variant-numeric:tabular-nums}
+.m-stat span{font-size:.72rem; color:var(--sub); font-weight:700}
+.m-meter{display:block; height:4px; border-radius:4px; background:rgba(255,255,255,.1); margin-top:6px; overflow:hidden}
+.m-meter i{display:block; height:100%; width:0; background:var(--lime); border-radius:4px; transition:width .8s cubic-bezier(.2,.9,.3,1)}
+.panel{background:#1A201C; border-radius:24px; padding:16px; display:flex; flex-direction:column; gap:14px}
+.panel-h{display:flex; justify-content:space-between; align-items:center; gap:10px}
+.panel-h b{font-size:.98rem; display:inline-flex; align-items:center; gap:8px}
+.m-n{font-size:.72rem; background:rgba(217,238,87,.16); color:var(--lime); padding:2px 8px; border-radius:99px; font-variant-numeric:tabular-nums}
+.seg{display:inline-flex; background:rgba(255,255,255,.08); border-radius:99px; padding:3px}
+.seg button{border:0; background:transparent; padding:6px 12px; border-radius:99px; font-weight:700; font-size:.78rem; color:var(--sub)}
+.seg button[aria-pressed="true"]{background:#fff; color:var(--ink)}
+.bars{display:grid; grid-template-columns:repeat(6,1fr); gap:8px; align-items:end; height:150px; background:repeating-linear-gradient(to top, rgba(255,255,255,.05) 0 1px, transparent 1px 37px) 0 20px / 100% calc(100% - 40px) no-repeat}
+.bar{display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end}
+.bar i{transform-origin:bottom center; display:block; width:100%; border-radius:10px 10px 6px 6px; background:rgba(255,255,255,.14); min-height:6px}
+.bar.top i{background:linear-gradient(var(--lime), #A9C23A); box-shadow:0 0 18px -4px rgba(217,238,87,.6)}
+.bar em{font-style:normal; font-weight:800; font-size:.85rem; font-variant-numeric:tabular-nums}
+.bar.top em{color:var(--lime)}
+.bar span{font-size:.72rem; color:var(--sub); font-weight:700}
+.m-kitfoot{display:flex; justify-content:space-between; align-items:center; gap:10px; border-top:1px solid var(--line); padding-top:12px; font-size:.84rem; color:var(--sub); font-weight:600}
+.m-kitfoot b{color:#fff}
+.m-mini{display:inline-flex; align-items:center; gap:6px; border:0; background:rgba(255,255,255,.1); color:#fff; padding:7px 12px; border-radius:99px; font-weight:700; font-size:.78rem; white-space:nowrap}
+.m-mini svg{width:14px; height:14px}
+.bloods{display:grid; grid-template-columns:repeat(4,1fr); gap:8px}
+.bloods div{background:rgba(255,255,255,.05); border-radius:16px; padding:10px 6px; display:flex; flex-direction:column; align-items:center; gap:4px; transition:background .3s}
+.bloods .bt{display:flex; align-items:center; gap:4px}
+.bloods svg{width:11px; height:15px} .bloods svg path{fill:none; stroke:var(--blood); stroke-width:2.2}
+.bloods b{font-family:var(--f-giant); font-weight:400; font-size:1.2rem; line-height:1}
+.bloods b sup{font-family:var(--f-ui); font-weight:800; font-size:.55em}
+.bloods span{font-weight:800; font-size:1rem; color:var(--sub); font-variant-numeric:tabular-nums}
+.bloods div.has{background:rgba(226,64,45,.16)} .bloods div.has span{color:#fff} .bloods div.has svg path{fill:var(--blood)}
+.m-search{display:flex; align-items:center; gap:8px; background:rgba(255,255,255,.06); border-radius:14px; padding:0 12px; box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.08)}
+.m-search:focus-within{box-shadow:inset 0 0 0 1.5px var(--lime)}
+.m-search svg{width:18px; height:18px; color:var(--sub); flex:0 0 auto}
+.m-search input{flex:1; min-width:0; background:transparent !important; border:0 !important; box-shadow:none !important; padding:12px 0 !important; min-height:46px !important; color:#fff !important; font-weight:600}
+.m-filters{display:flex; gap:6px; overflow-x:auto; scrollbar-width:none; margin-inline:-2px; padding:2px}
+.m-filters::-webkit-scrollbar{display:none}
+.m-f{flex:0 0 auto; border:0; background:rgba(255,255,255,.07); color:var(--sub); padding:7px 12px; border-radius:99px; font-weight:700; font-size:.78rem}
+.m-f[aria-pressed="true"]{background:var(--lime); color:var(--ink)}
+.mlist{display:flex; flex-direction:column; gap:6px}
+.mrow{background:rgba(255,255,255,.04); border-radius:18px; overflow:hidden; transition:background .2s}
+.mrow[open]{background:rgba(255,255,255,.07)}
+.mrow summary{display:grid; grid-template-columns:46px 1fr auto; gap:12px; align-items:center; padding:10px; cursor:pointer; list-style:none}
+.mrow summary::-webkit-details-marker{display:none}
+.av{width:46px; height:46px; border-radius:14px; overflow:hidden; background:var(--lime); color:var(--ink); display:grid; place-items:center; font-family:var(--f-giant); font-size:1.25rem}
+.av img{width:100%; height:100%; object-fit:cover}
+.who{min-width:0}
+.who b{display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.who span{display:block; font-size:.78rem; color:var(--sub); font-variant-numeric:tabular-nums; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.m-tags{display:flex; gap:4px; align-items:center}
+.bp{font-family:var(--f-giant); font-size:.95rem; padding:2px 9px; border-radius:99px; background:var(--blood); color:#fff}
+.kt{font-family:var(--f-giant); font-size:.85rem; padding:2px 7px; border-radius:8px; background:rgba(255,255,255,.1); color:var(--lime)}
+.mrow dl{margin:0; padding:2px 14px 4px 68px; display:grid; grid-template-columns:96px 1fr; gap:6px 10px; font-size:.86rem}
+.mrow dt{color:var(--sub)} .mrow dd{margin:0; overflow-wrap:anywhere}
+.m-rowact{display:flex; gap:6px; padding:10px 14px 14px 68px; flex-wrap:wrap}
+.empty{display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px; padding:22px 12px; color:var(--sub)}
+.empty b{color:#fff}
+
+/* dock */
+.dock{position:fixed; left:0; right:0; bottom:0; z-index:5; padding:0 14px calc(10px + env(safe-area-inset-bottom,0px)); pointer-events:none}
+.dock-in{max-width:460px; margin:0 auto; display:flex; flex-direction:column; gap:10px; pointer-events:auto}
+.ctarow{display:flex; gap:10px; align-items:center; padding-inline:6px}
+.cta{flex:1; min-height:58px; border:0; border-radius:99px; background:var(--cta); color:var(--cta-fg); font-weight:800; font-size:1.08rem; display:inline-flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 12px 26px -14px rgba(0,0,0,.55); transition:transform .12s}
+.cta:active{transform:scale(.97)}
+.cta svg{width:16px; height:16px}
+.cta[disabled]{opacity:.6; cursor:progress}
+.tabbar{display:flex; gap:4px; background:var(--dock); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border-radius:28px; padding:6px}
+.tabbar{position:relative}
+.tab-pill{position:absolute; top:6px; bottom:6px; left:6px; width:0; border-radius:22px; background:var(--cta); z-index:0; box-shadow:0 6px 16px -10px rgba(0,0,0,.6)}
+body[data-s="members"] .tab-pill{background:var(--lime)}
+.tabbar button{position:relative; z-index:1; transition:color .25s; flex:1; border:0; background:transparent; border-radius:22px; padding:8px 4px 6px; display:flex; flex-direction:column; align-items:center; gap:2px; font-size:.72rem; font-weight:700; color:var(--sub)}
+.tabbar button svg{width:22px; height:22px}
+.tabbar button[aria-selected="true"]{color:var(--cta-fg)}
+body[data-s="members"] .tabbar button[aria-selected="true"]{color:var(--ink)}
+
+.toast{position:fixed; left:50%; top:calc(14px + env(safe-area-inset-top,0px)); transform:translateX(-50%); background:var(--ink); color:#fff; padding:10px 18px; border-radius:99px; font-weight:700; font-size:.9rem; z-index:10; max-width:calc(100% - 32px); text-align:center; box-shadow:0 10px 30px -10px rgba(0,0,0,.5)}
+
+/* wide windows: show the app as a phone-sized screen, centred */
+@media (min-width:700px) and (min-height:640px){
+  html,body{height:100%}
+  body{display:grid; place-items:center; overflow:hidden; background:#E6E9E3; background:radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--bg) 26%, #ECEEE8) 0, #E3E6DF 62%)}
+  .shell{position:relative; width:390px; height:min(844px, calc(100vh - 40px)); border-radius:34px; overflow:hidden; background:var(--bg); color:var(--fg);
+    transform:translateZ(0); box-shadow:0 0 0 1px rgba(14,26,19,.08), 0 40px 80px -36px rgba(14,26,19,.55); transition:background-color .5s ease, color .3s}
+  .scroller{position:absolute; inset:0; overflow-y:auto; overflow-x:hidden; scrollbar-width:none}
+  .scroller::-webkit-scrollbar{display:none}
+  .screen{max-width:none; padding-block:16px 200px}
+  .dock{position:absolute; padding-bottom:12px}
+  .toast{position:absolute}
+}
+
+/* home screen fits one screen: art flexes into the space left above the dock */
+body[data-s="intro"] .screen{padding-bottom:0}
+[data-view="intro"]{gap:12px; height:var(--fitH, auto); min-height:360px}
+[data-view="intro"].short{gap:8px}
+[data-view="intro"].short .marquee{padding-block:6px}
+[data-view="intro"].short .mq-track span{font-size:1.25rem}
+[data-view="intro"] .kicker{opacity:.85}
+.season-badge{display:inline-block; vertical-align:middle; position:relative; top:-.12em; margin-left:.22em; padding:.32em .7em .28em; border-radius:99px;
+  background:var(--lime); color:var(--ink); font-size:.27em; letter-spacing:.02em; line-height:1; rotate:-6deg; box-shadow:0 6px 14px -8px rgba(0,0,0,.6)}
+.intro-art{flex:1 1 0; min-height:96px; display:flex; align-items:center; justify-content:center}
+.art.intro-art > svg.hero{width:auto; height:100%; max-width:100%; max-height:300px}
+.intro-lede{font-size:.95rem; margin-top:2px}
+
+/* blood group tiles */
+.bgrid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px}
+.bgrid .chip{display:flex; flex-direction:column; align-items:center; gap:3px; padding:11px 2px 10px; border-radius:18px;
+  background:rgba(255,255,255,.62); color:var(--ink); box-shadow:inset 0 0 0 1.5px rgba(14,26,19,.08)}
+.bgrid .chip .bt{display:flex; align-items:center; justify-content:center; gap:4px}
+.bgrid .chip svg{width:12px; height:16px; overflow:visible; flex:0 0 auto; margin-top:-2px}
+.bgrid .chip svg path{fill:none; stroke:var(--blood); stroke-width:2.2; transition:fill .2s, stroke .2s}
+.bgrid .chip b{font-family:var(--f-giant); font-weight:400; font-size:1.55rem; line-height:1; letter-spacing:.01em}
+.bgrid .chip b sup{font-family:var(--f-ui); font-weight:800; font-size:.5em; margin-left:1px; position:relative; top:-.15em}
+.bgrid .chip small{font-family:var(--f-ui); font-weight:700; font-size:.58rem; letter-spacing:.06em; text-transform:uppercase; opacity:.65; margin:0}
+.bgrid .chip[aria-pressed="true"]{background:var(--blood); color:#fff; transform:translateY(-3px) scale(1.04);
+  box-shadow:0 12px 22px -10px var(--blood), inset 0 0 0 2px rgba(255,255,255,.5)}
+.bgrid .chip[aria-pressed="true"] svg path{fill:#fff; stroke:#fff}
+.bgrid .chip[aria-pressed="true"] small{opacity:.9}
+.bnote{margin:2px 0 0; font-size:.86rem; font-weight:600; color:var(--sub); line-height:1.4; min-height:1.3em}
+.bnote b{color:var(--ink)}
+.bnote.hl{background:rgba(255,255,255,.6); color:var(--ink); padding:10px 12px; border-radius:14px}
+
+.card-actions{display:flex; gap:10px; flex-wrap:wrap}
+.ghost.solid{background:var(--ink); color:var(--lime); border-color:var(--ink)}
+
+/* assets */
+.art.has-sticker{position:relative}
+.art .sticker{position:absolute; right:10px; top:0; width:84px; height:84px; z-index:2; filter:drop-shadow(0 8px 14px rgba(0,0,0,.28))}
+#shoe{transform-box:fill-box; transform-origin:85% 95%; animation:stride 2.6s cubic-bezier(.45,0,.25,1) infinite}
+@keyframes stride{0%,62%,100%{transform:none} 22%{transform:translateY(-16px) rotate(-6deg)} 42%{transform:translateY(0) rotate(1.5deg)}}
+#shoe-shadow{transform-box:fill-box; transform-origin:center; animation:shadow 2.6s cubic-bezier(.45,0,.25,1) infinite}
+@keyframes shadow{0%,62%,100%{transform:none; opacity:.3} 22%{transform:scaleX(.78); opacity:.16} 42%{transform:none}}
+.speed path{stroke-dasharray:26 60; animation:speed 1.3s linear infinite}
+.speed path:nth-child(2){animation-delay:-.4s} .speed path:nth-child(3){animation-delay:-.8s}
+@keyframes speed{from{stroke-dashoffset:86} to{stroke-dashoffset:0}}
+.route{stroke-dasharray:1 10; animation:route 1.8s linear infinite}
+@keyframes route{to{stroke-dashoffset:-22}}
+.marquee{margin-inline:-28px; background:var(--lime); color:var(--ink); transform:rotate(-3deg); padding-block:10px; overflow:hidden; box-shadow:0 10px 24px -14px rgba(0,0,0,.5)}
+.mq-track{display:flex; align-items:center; gap:20px; width:max-content; animation:mq 22s linear infinite}
+.mq-track span{font-family:var(--f-giant); font-size:1.55rem; line-height:1; text-transform:uppercase; white-space:nowrap}
+.mq-track span[lang="ta"]{font-family:var(--f-ta); font-weight:600; font-size:1.2rem}
+.mq-track i{flex:0 0 10px; height:10px; background:var(--red); transform:rotate(45deg)}
+@keyframes mq{to{transform:translateX(-50%)}}
+.w{display:inline-block; white-space:nowrap}
+.ch{display:inline-block; will-change:transform}
+#fxc,#fxt{position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:0}
+#fxt{z-index:30}
+.screen{position:relative; z-index:1}
+.idcard::after{content:""; position:absolute; inset:0; pointer-events:none; border-radius:inherit; mix-blend-mode:overlay;
+  background:linear-gradient(115deg, transparent 32%, rgba(255,255,255,.55) 46%, rgba(217,238,87,.35) 52%, transparent 64%) no-repeat;
+  background-size:260% 100%; background-position:var(--sx, 140%) 0; animation:sheen 5s ease-in-out infinite}
+@keyframes sheen{0%,55%{background-position:140% 0} 85%,100%{background-position:-40% 0}}
+#idcard{perspective:900px}
+.sticker .ring{animation:spin 16s linear infinite; transform-box:fill-box; transform-origin:center}
+#idcard{position:relative}
+.stamp{position:absolute; right:-12px; bottom:6px; width:96px; height:96px; transform:rotate(14deg); z-index:2; filter:drop-shadow(0 8px 12px rgba(0,0,0,.3))}
+.stamp .ring{animation:spin 22s linear infinite reverse; transform-box:fill-box; transform-origin:center}
+.idgrid{padding-right:74px}
+
+#drop-art{will-change:transform}
+/* kit rail */
+.hang{transform-box:view-box; transition:scale .45s cubic-bezier(.3,1.6,.5,1); animation:sway 3.4s ease-in-out infinite}
+#tee-g{transform-origin:139px 22px}
+#low-g{transform-origin:299px 22px; animation-delay:-1.2s}
+@keyframes sway{0%,100%{rotate:-2.2deg} 50%{rotate:2.2deg}}
+.hang.jig{animation:jig .9s cubic-bezier(.3,1.4,.5,1), sway 3.4s ease-in-out .9s infinite}
+@keyframes jig{0%{rotate:0} 20%{rotate:9deg} 45%{rotate:-6deg} 70%{rotate:3deg} 100%{rotate:0}}
+/* contact chat */
+.float-a{animation:floatA 5s ease-in-out infinite} .float-b{animation:floatA 5s ease-in-out -2.5s infinite}
+@keyframes floatA{50%{translate:0 -6px}}
+.plane{animation:plane 3.2s ease-in-out infinite}
+@keyframes plane{0%,100%{translate:0 0} 50%{translate:-6px 5px}}
+.chat > g{transform-box:fill-box; transform-origin:left bottom}
+.chat > g.bout{transform-origin:right bottom}
+.replay.play .chat > g{animation:pop .55s cubic-bezier(.3,1.6,.5,1) both}
+.replay.play .chat > g:nth-child(1){animation-delay:.35s} .replay.play .chat > g:nth-child(2){animation-delay:1s}
+.replay.play .chat > g:nth-child(3){animation-delay:1.7s} .replay.play .chat > g:nth-child(4){animation-delay:2.3s}
+@keyframes pop{from{scale:0; opacity:0}}
+.typing circle{animation:blink 1.1s ease-in-out infinite} .typing circle:nth-of-type(2){animation-delay:.18s} .typing circle:nth-of-type(3){animation-delay:.36s}
+@keyframes blink{0%,60%,100%{translate:0 0; opacity:.35} 30%{translate:0 -3px; opacity:1}}
+.pulse{transform-box:fill-box; transform-origin:center; animation:pulse 1.6s ease-out infinite}
+@keyframes pulse{from{scale:1; opacity:.6} to{scale:2.3; opacity:0}}
+.empty svg{width:150px; height:auto}
+
+/* motion */
+.css-enter > *{animation:up .55s cubic-bezier(.2,.9,.3,1) both}
+.css-enter > *:nth-child(2){animation-delay:.04s} .css-enter > *:nth-child(3){animation-delay:.08s} .css-enter > *:nth-child(4){animation-delay:.12s} .css-enter > *:nth-child(5){animation-delay:.16s}
+@keyframes up{from{transform:translateY(14px)}}
+.bob{animation:bob 3.4s ease-in-out infinite; transform-origin:center}
+@keyframes bob{50%{transform:translateY(-6px) rotate(-2deg)}}
+.spin{animation:spin 40s linear infinite; transform-box:fill-box; transform-origin:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+.runner{animation:lap 9s linear infinite; offset-path:path("M150 22 H215 A62 62 0 0 1 215 146 H85 A62 62 0 0 1 85 22 Z")}
+@keyframes lap{to{offset-distance:100%}}
+.twinkle{animation:tw 2.4s ease-in-out infinite alternate}
+@keyframes tw{to{opacity:.25}}
+@media (prefers-reduced-motion: reduce){*{animation:none!important; transition:none!important}}
+
+</style>
+
+<!-- ============ SCREENS ============ -->
+<div class="shell" id="shell">
+<canvas id="fxc" aria-hidden="true"></canvas>
+<canvas id="fxt" aria-hidden="true"></canvas>
+<div class="scroller" id="scroller">
+<div class="screen" id="screen">
+
+  <!-- INTRO -->
+  <section data-view="intro">
+    <span class="kicker">Member registration · Chengalpattu</span>
+    <h1 class="giant">Walkers<br>Welfare<br>Club<span class="season-badge">2026–27</span></h1>
+    <div class="art has-sticker intro-art" aria-hidden="true">
+      <svg class="sticker" viewBox="0 0 100 100">
+        <defs><path id="st-c" d="M50 50 m-36 0 a36 36 0 1 1 72 0 a36 36 0 1 1 -72 0"/></defs>
+        <circle cx="50" cy="50" r="48" fill="var(--lime)"/>
+        <circle cx="50" cy="50" r="27" fill="none" stroke="var(--ink)" stroke-width="1.4" stroke-dasharray="2.5 3"/>
+        <g class="ring"><text font-family="Figtree, sans-serif" font-weight="800" font-size="9.4" fill="var(--ink)"><textPath href="#st-c" textLength="224" lengthAdjust="spacing">MORNING WALKERS • CHENGALPATTU • </textPath></text></g>
+        <g fill="var(--ink)" transform="translate(50 53) rotate(-14) scale(.9)"><ellipse cx="-7" cy="4" rx="5.4" ry="9"/><circle cx="-11" cy="-8.5" r="1.7"/><circle cx="-7.6" cy="-10" r="1.7"/><circle cx="-4" cy="-9.4" r="1.6"/><ellipse cx="8" cy="-3" rx="5.4" ry="9"/><circle cx="4" cy="-15.5" r="1.7"/><circle cx="7.6" cy="-17" r="1.7"/><circle cx="11.2" cy="-16.4" r="1.6"/></g>
+      </svg>
+      <svg class="hero" viewBox="0 14 400 262">
+        <!-- start pin + walking route -->
+        <path class="route" d="M42 76 C52 104 24 126 34 160" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".7"/>
+        <path d="M42 70 C42 70 24 50 24 39 a18 18 0 0 1 36 0 C60 50 42 70 42 70Z" fill="var(--red)"/>
+        <circle cx="42" cy="39" r="7" fill="#fff"/>
+        <!-- speed lines -->
+        <g class="speed" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".55" fill="none">
+          <path d="M4 150 H56"/><path d="M0 178 H44"/><path d="M10 206 H52"/>
+        </g>
+        <ellipse id="shoe-shadow" cx="216" cy="262" rx="166" ry="11" fill="#0B1A66" opacity=".3"/>
+        <g id="shoe">
+          <!-- outsole -->
+          <path d="M62 226 L364 222 C362 233 352 239 338 239 L76 241 C66 241 60 235 62 226Z" fill="var(--ink)"/>
+          <path d="M84 236 L338 233" stroke="#fff" stroke-width="4" stroke-dasharray="6 13" opacity=".35"/>
+          <!-- midsole -->
+          <path d="M40 192 L386 190 C390 205 384 219 364 223 L66 227 C48 227 38 215 40 192Z" fill="#fff"/>
+          <path d="M60 211 C150 207 262 205 372 207" fill="none" stroke="var(--cobalt)" stroke-width="4" stroke-dasharray="10 8" stroke-linecap="round"/>
+          <!-- upper -->
+          <path d="M46 196 C40 160 50 124 80 108 L136 88 C150 116 178 132 212 136 C258 142 310 154 348 170 C368 178 382 186 384 194Z" fill="var(--lime)"/>
+          <!-- tongue -->
+          <path d="M136 88 C138 66 158 52 180 56 C177 78 182 104 194 128 L160 120Z" fill="#BCD13A"/>
+          <!-- toe cap -->
+          <path d="M298 152 C330 158 360 170 378 182 C383 186 384 190 384 194 L300 196 C290 182 290 166 298 152Z" fill="#fff"/>
+          <path d="M304 160 C298 172 298 184 306 192" fill="none" stroke="var(--ink)" stroke-width="1.6" stroke-dasharray="4 4" opacity=".4"/>
+          <!-- heel counter + tab -->
+          <path d="M46 196 C40 160 50 124 80 108 L100 101 C89 132 93 166 114 196Z" fill="var(--red)"/>
+          <path d="M106 108 C96 136 99 166 118 192" fill="none" stroke="#fff" stroke-width="1.6" stroke-dasharray="4 4" opacity=".55"/>
+          <path d="M72 112 L62 86 Q61 80 68 80 L77 80 L86 106Z" fill="var(--red)"/>
+          <!-- collar -->
+          <path d="M84 107 C88 85 118 74 138 88 C124 93 104 99 84 107Z" fill="var(--ink)"/>
+          <path d="M80 109 C86 82 121 70 141 88" fill="none" stroke="var(--ink)" stroke-width="8" stroke-linecap="round"/>
+          <!-- heartbeat side mark -->
+          <path d="M120 172 H160 L172 150 L186 190 L199 158 L208 172 H266" fill="none" stroke="var(--red)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- eyelets + laces -->
+          <g fill="var(--ink)"><circle cx="156" cy="121" r="3.4"/><circle cx="178" cy="129" r="3.4"/><circle cx="200" cy="135" r="3.4"/><circle cx="222" cy="140" r="3.4"/><circle cx="244" cy="145" r="3.4"/></g>
+          <g stroke="#fff" stroke-width="6" stroke-linecap="round"><path d="M150 106 L164 120"/><path d="M164 106 L150 120"/><path d="M172 114 L186 128"/><path d="M186 114 L172 128"/><path d="M194 121 L208 134"/><path d="M208 121 L194 134"/><path d="M216 127 L230 139"/><path d="M230 127 L216 139"/></g>
+          <g fill="none" stroke="#fff" stroke-width="4.5" stroke-linecap="round"><path d="M154 102 C138 86 126 98 146 106"/><path d="M158 102 C162 80 178 86 164 104"/><path d="M152 106 C142 120 136 128 128 132"/></g>
+        </g>
+      </svg>
+    </div>
+    <div aria-hidden="true"><div class="marquee"><div class="mq-track">
+      <span>Walk daily</span><i></i><span lang="ta">நடப்போம்</span><i></i><span>Stay fit</span><i></i><span lang="ta">நலம் பெறுவோம்</span><i></i>
+      <span>Walk daily</span><i></i><span lang="ta">நடப்போம்</span><i></i><span>Stay fit</span><i></i><span lang="ta">நலம் பெறுவோம்</span><i></i>
+    </div></div></div>
+    <p class="lede intro-lede">Six quick steps. Keep a clear photo ready.</p>
+  </section>
+
+  <form id="form" novalidate>
+  <!-- STEP 0 -->
+  <section data-view="0" hidden>
+    <div class="top"><span class="top-l"><b>Step 1 of 6</b> · About you</span><button type="button" class="roundbtn back" aria-label="Back"><svg viewBox="0 0 20 20"><path d="M12 4 6 10l6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    <div class="segs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <span class="kicker">Lap one</span>
+    <h2 class="giant">Who's<br>walking?</h2>
+    <div class="art" aria-hidden="true">
+      <svg viewBox="0 0 300 168" style="max-width:340px; margin:0 auto">
+        <g fill="none" stroke="#fff" stroke-width="3">
+          <rect x="22" y="10" width="256" height="148" rx="74" opacity=".95"/>
+          <rect x="36" y="24" width="228" height="120" rx="60" opacity=".75"/>
+          <rect x="50" y="38" width="200" height="92" rx="46" opacity=".55"/>
+          <rect x="64" y="52" width="172" height="64" rx="32" opacity=".35"/>
+        </g>
+        <path d="M150 10 v28" stroke="#fff" stroke-width="3" stroke-dasharray="3 4"/>
+        <circle class="runner" r="9" fill="#FFD23F" stroke="var(--red)" stroke-width="3"/>
+      </svg>
+    </div>
+    <div class="fields">
+      <div class="field" id="f-name"><label class="label" for="name">Name <span class="ta" lang="ta">பெயர்</span></label><input type="text" id="name" autocomplete="name" placeholder="R. Lakshmi Narayanan"><span class="err"></span></div>
+      <div class="field" id="f-father"><label class="label" for="father">Father's name <span class="ta" lang="ta">தந்தை பெயர்</span></label><input type="text" id="father" placeholder="K. Rajagopal"><span class="err"></span></div>
+      <div class="field" id="f-dob"><label class="label" for="dob">Date of birth <span class="ta" lang="ta">பிறந்த தேதி</span></label><input type="date" id="dob"><span class="err"></span></div>
+    </div>
+  </section>
+
+  <!-- STEP 1 -->
+  <section data-view="1" hidden>
+    <div class="top"><span class="top-l"><b>Step 2 of 6</b> · Contact</span><button type="button" class="roundbtn back" aria-label="Back"><svg viewBox="0 0 20 20"><path d="M12 4 6 10l6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    <div class="segs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <h2 class="giant" style="font-family:var(--f-serif); font-style:italic; text-transform:none; font-size:clamp(3.4rem,17vw,5rem); line-height:1.02; letter-spacing:-.01em">Keep in<br>touch</h2>
+    <p class="lede">Walk timings, kit pickup and club news come to this number and mail ID.</p>
+    <div class="art" aria-hidden="true">
+      <svg class="replay" viewBox="0 0 400 236">
+        <!-- envelope -->
+        <g class="float-a">
+          <g transform="rotate(-12 112 132)">
+            <rect x="34" y="84" width="156" height="104" rx="14" fill="var(--cream)"/>
+            <path d="M34 176 L96 132 M190 176 L128 132" stroke="#E7D7B4" stroke-width="5" stroke-linecap="round"/>
+            <path d="M40 94 L112 146 L184 94" fill="none" stroke="var(--red)" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"/>
+            <circle cx="66" cy="160" r="15" fill="var(--cobalt)"/>
+            <text x="66" y="166" text-anchor="middle" font-family="Figtree, sans-serif" font-weight="800" font-size="17" fill="#fff">@</text>
+            <rect x="150" y="146" width="28" height="30" rx="3" fill="#fff" stroke="var(--red)" stroke-width="2" stroke-dasharray="3 2"/>
+            <path d="M156 166 l5 -8 l5 6 l4 -4 l4 6z" fill="var(--leaf)"/>
+          </g>
+        </g>
+        <!-- paper plane + trail -->
+        <path class="route" d="M150 64 C190 20 260 10 336 34" fill="none" stroke="var(--ink)" stroke-width="3.5" stroke-linecap="round" opacity=".45"/>
+        <g class="plane">
+          <path d="M338 22 L384 8 L362 52 L352 38Z" fill="#fff"/>
+          <path d="M338 22 L352 38 L384 8Z" fill="#F1E6CC"/>
+          <path d="M352 38 L356 50 L362 52" fill="#D9C9A6"/>
+        </g>
+        <!-- phone -->
+        <g class="float-b">
+          <g transform="rotate(7 262 124)">
+            <rect x="196" y="12" width="134" height="220" rx="24" fill="var(--ink)"/>
+            <rect x="204" y="22" width="118" height="200" rx="17" fill="#FFF8EA"/>
+            <path d="M204 39 a17 17 0 0 1 17 -17 h84 a17 17 0 0 1 17 17 v20 h-118z" fill="var(--cobalt)"/>
+            <rect x="244" y="27" width="38" height="7" rx="3.5" fill="var(--ink)"/>
+            <circle cx="223" cy="48" r="9" fill="var(--lime)"/>
+            <g fill="var(--ink)" transform="translate(223 49) scale(.42)"><ellipse cx="-7" cy="4" rx="5.4" ry="9"/><ellipse cx="8" cy="-3" rx="5.4" ry="9"/></g>
+            <text x="237" y="47" font-family="Figtree, sans-serif" font-weight="800" font-size="9" fill="#fff">Walkers Club</text>
+            <text x="237" y="56" font-family="Figtree, sans-serif" font-weight="600" font-size="6.5" fill="#fff" opacity=".75">Members · online</text>
+            <g class="chat">
+              <g class="bin"><rect x="210" y="68" width="84" height="24" rx="11" fill="#fff" stroke="#EADFC7"/><text x="219" y="84" font-family="Figtree, sans-serif" font-weight="700" font-size="8.4" fill="var(--ink)">Walk tomorrow?</text></g>
+              <g class="bout"><rect x="252" y="100" width="56" height="24" rx="11" fill="var(--lime)"/><text x="262" y="116" font-family="Figtree, sans-serif" font-weight="800" font-size="8.4" fill="var(--ink)">I'm in!</text></g>
+              <g class="bin"><rect x="210" y="132" width="82" height="24" rx="11" fill="#fff" stroke="#EADFC7"/><text x="219" y="148" font-family="Figtree, sans-serif" font-weight="700" font-size="8.4" fill="var(--ink)">See you there!</text></g>
+              <g class="bin typing"><rect x="210" y="164" width="38" height="20" rx="10" fill="#fff" stroke="#EADFC7"/><circle cx="221" cy="174" r="2.6" fill="var(--ink)"/><circle cx="229" cy="174" r="2.6" fill="var(--ink)"/><circle cx="237" cy="174" r="2.6" fill="var(--ink)"/></g>
+            </g>
+            <rect x="210" y="198" width="90" height="16" rx="8" fill="#EFE4CB"/>
+            <circle cx="310" cy="206" r="9" fill="var(--red)"/><path d="M306 206 h7 m-3 -3 l3 3 l-3 3" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <circle class="pulse" cx="330" cy="20" r="12" fill="var(--red)"/>
+          <circle cx="330" cy="20" r="12" fill="var(--red)"/>
+          <text x="330" y="25" text-anchor="middle" font-family="Figtree, sans-serif" font-weight="800" font-size="13" fill="#fff">1</text>
+        </g>
+      </svg>
+    </div>
+    <div class="fields">
+      <div class="field" id="f-cell"><label class="label" for="cell">Cell number <span class="ta" lang="ta">கைபேசி எண்</span></label><div class="prefix"><span>+91</span><input type="tel" id="cell" inputmode="numeric" maxlength="11" autocomplete="tel-national" placeholder="98400 12345"></div><span class="err"></span></div>
+      <div class="field" id="f-email"><label class="label" for="email">Mail ID <span class="ta" lang="ta">மின்னஞ்சல்</span></label><input type="email" id="email" autocomplete="email" inputmode="email" placeholder="name@gmail.com"><span class="err"></span></div>
+      <div class="field" id="f-address"><label class="label" for="address">Address <span class="ta" lang="ta">முகவரி</span></label><textarea id="address" autocomplete="street-address" placeholder="Door no., street, area, Chengalpattu 603001"></textarea><span class="err"></span></div>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section data-view="2" hidden>
+    <div class="top"><span class="top-l"><b>Step 3 of 6</b> · Family &amp; health</span><button type="button" class="roundbtn back" aria-label="Back"><svg viewBox="0 0 20 20"><path d="M12 4 6 10l6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    <div class="segs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="art" id="drop-art" aria-hidden="true" style="margin-top:-6px">
+      <svg viewBox="0 0 400 220">
+        <g class="bob">
+          <path d="M200 14 C200 14 120 104 120 148 a80 80 0 0 0 160 0 C280 104 200 14 200 14Z" fill="var(--blood)"/>
+          <path d="M152 150 a48 48 0 0 0 40 46" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".55"/>
+          <text id="drop-label" x="200" y="176" text-anchor="middle" font-family="Anton, Impact, sans-serif" font-size="58" fill="#fff">?</text>
+        </g>
+        <g fill="var(--leaf)"><path d="M310 120 c-10 -14 -32 -4 -22 14 l22 22 l22 -22 c10 -18 -12 -28 -22 -14z"/><path d="M70 60 c26 -30 62 -24 70 -4 c-30 -4 -50 4 -70 4z"/><path d="M40 160 c6 -30 36 -42 52 -30 c-24 10 -34 22 -52 30z"/></g>
+      </svg>
+    </div>
+    <h2 class="giant">Blood &amp;<br>bonds</h2>
+    <p class="lede">Your blood group stays with the organisers and is used only if someone needs help on a walk.</p>
+    <div class="fields">
+      <div class="field" id="f-blood"><span class="label" id="blood-l">Blood group <span class="ta" lang="ta">இரத்த வகை</span></span><div class="bgrid" role="group" aria-labelledby="blood-l" id="blood"></div><p class="bnote" id="bnote" aria-live="polite">Tap your group. Only the organisers can see it.</p><span class="err"></span></div>
+      <div class="field" id="f-dom"><label class="label" for="dom">Date of marriage <span class="ta" lang="ta">திருமண தேதி</span></label><input type="date" id="dom"><label class="toggle"><input type="checkbox" id="single"> Not married</label><span class="err"></span></div>
+    </div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section data-view="3" hidden>
+    <div class="top"><span class="top-l"><b>Step 4 of 6</b> · Club kit</span><button type="button" class="roundbtn back" aria-label="Back"><svg viewBox="0 0 20 20"><path d="M12 4 6 10l6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    <div class="segs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <span class="kicker">Season kit</span>
+    <h2 class="giant">Suit<br>up</h2>
+    <div class="art" aria-hidden="true">
+      <svg viewBox="0 0 360 292">
+        <!-- rail -->
+        <path d="M14 18 H346" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".9"/>
+        <rect x="8" y="10" width="10" height="16" rx="3" fill="#fff" opacity=".9"/><rect x="342" y="10" width="10" height="16" rx="3" fill="#fff" opacity=".9"/>
+        <!-- tee hook -->
+        <path d="M132 36 V28 C132 16 146 14 146 24" fill="none" stroke="var(--ink)" stroke-width="4.5" stroke-linecap="round"/>
+        <g id="tee-g" class="hang">
+          <path d="M72 66 L132 36 L192 66" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- body -->
+          <path d="M104 60 L66 78 L50 120 L76 130 L84 110 L84 238 Q132 247 180 238 L180 110 L188 130 L214 120 L198 78 L160 60 C154 74 144 80 132 80 C120 80 110 74 104 60Z" fill="var(--lime)"/>
+          <!-- sleeves -->
+          <path d="M104 60 L66 78 L50 120 L76 130 L86 104Z" fill="var(--ink)"/>
+          <path d="M160 60 L198 78 L214 120 L188 130 L178 104Z" fill="var(--ink)"/>
+          <path d="M50 120 L76 130 M188 130 L214 120" stroke="var(--red)" stroke-width="7" stroke-linecap="round"/>
+          <!-- fold shade + collar -->
+          <path d="M84 110 L84 238 Q92 240 98 240 L95 114Z" fill="#000" opacity=".08"/>
+          <path d="M104 60 C110 74 120 80 132 80 C144 80 154 74 160 60 C152 66 142 70 132 70 C122 70 112 66 104 60Z" fill="#BCD13A"/>
+          <path d="M104 60 C110 74 120 80 132 80 C144 80 154 74 160 60" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linecap="round"/>
+          <!-- chest badge -->
+          <circle cx="156" cy="112" r="13" fill="var(--cobalt)"/>
+          <g fill="#fff" transform="translate(156 113) rotate(-14) scale(.55)"><ellipse cx="-7" cy="4" rx="5.4" ry="9"/><ellipse cx="8" cy="-3" rx="5.4" ry="9"/></g>
+          <!-- heartbeat + name -->
+          <path d="M90 156 H114 L122 140 L132 170 L141 146 L147 156 H174" fill="none" stroke="var(--red)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <text x="132" y="212" text-anchor="middle" font-family="Anton, Impact, sans-serif" font-size="34" fill="var(--cobalt)">WWC</text>
+          <path d="M88 230 Q132 238 176 230" fill="none" stroke="var(--ink)" stroke-width="1.6" stroke-dasharray="4 4" opacity=".35"/>
+          <!-- size tag -->
+          <path d="M203 125 L222 150" stroke="#fff" stroke-width="1.6"/>
+          <g transform="translate(212 146) rotate(10)">
+            <rect x="0" y="0" width="38" height="50" rx="7" fill="#fff"/>
+            <circle cx="19" cy="9" r="3.2" fill="var(--cobalt)"/>
+            <text id="tee-tag" x="19" y="38" text-anchor="middle" font-family="Anton, Impact, sans-serif" font-size="17" fill="var(--ink)">?</text>
+          </g>
+        </g>
+        <!-- pants hook -->
+        <path d="M292 36 V28 C292 16 306 14 306 24" fill="none" stroke="var(--ink)" stroke-width="4.5" stroke-linecap="round"/>
+        <g id="low-g" class="hang hang-b">
+          <path d="M254 46 H330" stroke="var(--ink)" stroke-width="6" stroke-linecap="round"/>
+          <path d="M292 36 L262 46 M292 36 L322 46" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
+          <rect x="258" y="42" width="10" height="14" rx="2" fill="#B9C2D9"/><rect x="316" y="42" width="10" height="14" rx="2" fill="#B9C2D9"/>
+          <path d="M256 54 L328 54 L334 262 L302 262 L292 128 L282 262 L250 262Z" fill="var(--ink)"/>
+          <rect x="256" y="52" width="72" height="14" rx="3" fill="var(--red)"/>
+          <path d="M288 66 v18 M296 66 v14" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M259 68 L253 258 M325 68 L331 258" stroke="var(--lime)" stroke-width="5" stroke-linecap="round"/>
+          <path d="M250 250 H282 M302 250 H334" stroke="#2A3A30" stroke-width="7"/>
+          <g transform="translate(226 74) rotate(-10)">
+            <path d="M38 6 L44 2" stroke="#fff" stroke-width="1.6"/>
+            <rect x="0" y="0" width="38" height="50" rx="7" fill="#fff"/>
+            <circle cx="19" cy="9" r="3.2" fill="var(--red)"/>
+            <text id="low-tag" x="19" y="38" text-anchor="middle" font-family="Anton, Impact, sans-serif" font-size="17" fill="var(--ink)">?</text>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div class="fields">
+      <div class="field" id="f-tee"><span class="label" id="tee-l">T-shirt size <span class="ta" lang="ta">டி-ஷர்ட் அளவு</span></span><div class="chips six" role="group" aria-labelledby="tee-l" id="tee"></div><span class="err"></span></div>
+      <div class="field" id="f-lower"><span class="label" id="low-l">Lower size <span class="ta" lang="ta">லோயர் அளவு</span></span><div class="chips six" role="group" aria-labelledby="low-l" id="lower"></div><span class="err"></span></div>
+    </div>
+    <p class="lede" style="font-size:.85rem">Chest in inches under the T-shirt sizes, waist in inches under the lower sizes.</p>
+  </section>
+
+  <!-- STEP 4 -->
+  <section data-view="4" hidden>
+    <div class="top"><span class="top-l"><b>Step 5 of 6</b> · Photo</span><button type="button" class="roundbtn back" aria-label="Back"><svg viewBox="0 0 20 20"><path d="M12 4 6 10l6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    <div class="segs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <h2 class="giant">Say<br>cheese</h2>
+    <p class="lede">This photo goes on your member card. Face the camera in good light.</p>
+    <div class="field" id="f-photo">
+      <label class="vf" id="drop" for="photo">
+        <span class="vf-tag">Member card photo</span>
+        <span class="vf-in" id="frame">
+          <svg class="vf-guide" viewBox="0 0 200 200" aria-hidden="true">
+            <ellipse cx="100" cy="88" rx="44" ry="56" fill="none" stroke="#fff" stroke-width="2.6" stroke-dasharray="6 7" opacity=".65"/>
+            <path d="M34 204 C42 164 68 148 100 148 S158 164 166 204" fill="none" stroke="#fff" stroke-width="2.6" stroke-dasharray="6 7" opacity=".65"/>
+          </svg>
+          <span class="vf-hint">Your face here</span>
+        </span>
+        <i class="vf-c tl"></i><i class="vf-c tr"></i><i class="vf-c bl"></i><i class="vf-c br"></i>
+        <i class="vf-scan" aria-hidden="true"></i>
+        <span class="vf-ok" id="vf-ok" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Looks good</span>
+      </label>
+      <input type="file" id="photo" class="vh" accept="image/jpeg,image/png,image/webp">
+      <input type="file" id="photo-cam" class="vh" accept="image/*" capture="user">
+      <div class="vf-actions">
+        <label class="vf-btn primary" for="photo-cam"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.6l1.3-2h5.2l1.3 2h1.6A2.5 2.5 0 0 1 20 8.5v8A2.5 2.5 0 0 1 17.5 19h-11A2.5 2.5 0 0 1 4 16.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12.5" r="3.4" fill="none" stroke="currentColor" stroke-width="2"/></svg> Take selfie</label>
+        <label class="vf-btn" for="photo"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="10" r="1.8" fill="currentColor"/><path d="M4.5 17.5l5-5 3.5 3.5 2.5-2.5 4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg> <span id="drop-t">Gallery</span></label>
+      </div>
+      <span class="hint" id="drop-h">JPG, PNG or WebP · up to 10 MB · <span lang="ta">புகைப்படம்</span></span>
+      <span class="err" style="text-align:center"></span>
+    </div>
+    <ul class="tips" aria-label="Photo tips"><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Face the camera</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Good light</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> No sunglasses</li></ul>
+  </section>
+
+  <!-- STEP 5 -->
+  <section data-view="5" hidden>
+    <div class="top"><span class="top-l"><b>Step 6 of 6</b> · Review</span><button type="button" class="roundbtn back" aria-label="Back"><svg viewBox="0 0 20 20"><path d="M12 4 6 10l6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    <div class="segs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <h2 class="giant">All<br>good?</h2>
+    <p class="lede">Check each section. Tap <strong>Edit</strong> to fix anything before you submit.</p>
+    <div class="rv" id="review"></div>
+    <div class="field" id="f-confirm">
+      <label class="rv-confirm"><input type="checkbox" id="confirm"><span class="rv-box" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>I confirm these details are correct and can be shared with the club organisers.</span></label>
+      <span class="err"></span>
+    </div>
+  </section>
+  </form>
+
+  <!-- DONE / CARD -->
+  <section data-view="done" hidden>
+    <div class="top"><span class="top-l"><b>Member card</b> · 2026–27</span><span></span></div>
+    <span class="kicker" id="done-k">You're in</span>
+    <h2 class="giant" id="done-h">Welcome,<br>walker</h2>
+    <div id="idcard"></div>
+    <div class="note" id="done-note" hidden></div>
+    <p class="lede">Show this card at kit pickup. See you on the morning walk.</p>
+    <div class="card-actions"><button class="ghost" type="button" id="edit-again">Edit my details</button><button class="ghost solid" type="button" id="new-member" hidden>+ Register another member</button></div>
+  </section>
+
+  <!-- EMPTY CARD -->
+  <section data-view="nocard" hidden>
+    <div class="top"><span class="top-l"><b>Member card</b></span><span></span></div>
+    <h2 class="giant">No card<br>yet</h2>
+    <p class="lede">Your member card appears here after you register.</p>
+  </section>
+
+  <!-- MEMBERS -->
+  <section data-view="members" hidden>
+    <div class="top"><span class="top-l"><b>Organisers</b> · Season 2026–27</span><span></span></div>
+    <span class="kicker" style="color:var(--lime)">Organiser dashboard</span>
+    <div class="m-hero">
+      <div><div class="m-count" id="st-total">0</div><div class="m-label">walkers registered</div></div>
+      <div class="m-spark"><svg id="m-spark" viewBox="0 0 140 56" preserveAspectRatio="none" aria-hidden="true"></svg><span>Growth · 14 days</span></div>
+    </div>
+    <div class="m-stats">
+      <div class="m-stat"><b id="st-week">+0</b><span>This week</span></div>
+      <div class="m-stat"><b id="st-photo">0/0</b><span>With photo</span><i class="m-meter"><i id="st-photo-bar"></i></i></div>
+      <div class="m-stat"><b id="st-age">—</b><span>Average age</span></div>
+    </div>
+    <div class="panel">
+      <div class="panel-h"><b>Kit order</b><div class="seg"><button type="button" id="seg-tee" aria-pressed="true">T-shirts</button><button type="button" id="seg-low" aria-pressed="false">Lowers</button></div></div>
+      <div class="bars" id="bars"></div>
+      <div class="m-kitfoot"><span id="kit-sum">No orders yet</span><button type="button" class="m-mini" id="copy-kit"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="2"/></svg> Copy order</button></div>
+    </div>
+    <div class="panel">
+      <div class="panel-h"><b>Blood groups</b><span class="hint" id="st-donor"></span></div>
+      <div class="bloods" id="bloods"></div>
+    </div>
+    <div class="panel m-listpanel">
+      <div class="panel-h"><b>Members <span class="m-n" id="m-n">0</span></b><div class="seg"><button type="button" id="sort-new" aria-pressed="true">Newest</button><button type="button" id="sort-az" aria-pressed="false">A–Z</button></div></div>
+      <label class="m-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M16 16l4 4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><input id="q" type="search" placeholder="Search name, phone, area" aria-label="Search members"></label>
+      <div class="m-filters" role="group" aria-label="Filter members">
+        <button type="button" class="m-f" data-f="all" aria-pressed="true">All</button>
+        <button type="button" class="m-f" data-f="week" aria-pressed="false">This week</button>
+        <button type="button" class="m-f" data-f="nophoto" aria-pressed="false">No photo</button>
+        <button type="button" class="m-f" data-f="neg" aria-pressed="false">Rh negative</button>
+      </div>
+      <div class="mlist" id="mlist"></div>
+    </div>
+    <div class="actions m-export"><button type="button" id="dl-csv"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l-4.5-4.5M12 15l4.5-4.5M5 19h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg> Download CSV</button><button type="button" class="alt" id="copy-csv"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="2"/></svg> Copy for Excel</button></div>
+  </section>
+</div>
+</div><!-- /scroller -->
+
+<!-- DOCK -->
+<div class="dock"><div class="dock-in">
+  <div class="ctarow" id="ctarow"><button class="cta" type="button" id="next"><svg viewBox="0 0 16 16"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg><span id="next-t">Start registration</span></button></div>
+  <nav class="tabbar" role="tablist" aria-label="Sections"><span class="tab-pill" id="tab-pill" aria-hidden="true"></span>
+    <button role="tab" id="tab-reg" aria-selected="true"><svg viewBox="0 0 24 24"><path d="M9 4.5a2 2 0 1 0 4 0a2 2 0 1 0-4 0M10 8l-3 5h3l-1 7M11 8l3 4l3 1M11 14l3 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Register</button>
+    <button role="tab" id="tab-card" aria-selected="false"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="11" r="2" fill="currentColor"/><path d="M6 16c1-2 5-2 6 0M14 10h4M14 13h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>My card</button>
+    <button role="tab" id="tab-mem" aria-selected="false" hidden><svg viewBox="0 0 24 24"><path d="M5 20V11M12 20V5M19 20v-6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>Members</button>
+  </nav>
+</div></div>
+<div class="toast" id="toast" hidden role="status"></div>
+</div><!-- /shell -->
+
+<script src="https://cdn.jsdelivr.net/npm/motion@11.18.2/dist/motion.js"></script>
+<script>
+(() => {
+const $ = id => document.getElementById(id);
+const BLOOD = ["A+","A−","B+","B−","O+","O−","AB+","AB−"];
+const TEE = [["S","36"],["M","38"],["L","40"],["XL","42"],["XXL","44"],["3XL","46"]];
+const LOWER = [["S","28"],["M","30"],["L","32"],["XL","34"],["XXL","36"],["3XL","38"]];
+const SCALE = {S:.86,M:.91,L:.96,XL:1,XXL:1.05,"3XL":1.1};
+const DRAFT_KEY = "wwc-draft-2026";
+const LAST = 5;
+
+let userNav = false;
+let view = "intro", db = null, uid = null, isAdmin = false, members = [], saved = null, barMode = "tee";
+const state = {name:"",father:"",dob:"",cell:"",email:"",address:"",dom:"",single:false,blood:"",tee:"",lower:"",photo:""};
+
+const today = new Date().toISOString().slice(0,10);
+$("dob").max = today; $("dom").max = today;
+
+// ---------- motion (Framer's Motion library; CSS fallback if it fails to load) ----------
+const MO = window.Motion || null;
+const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const live = !!MO && !RM;
+const sp = (stiffness = 420, damping = 30, extra = {}) => ({type:"spring", stiffness, damping, ...extra});
+function fx(el, kf, opt){ if (!live || !el) return null; try { return MO.animate(el, kf, opt); } catch(e){ return null; } }
+function enterScreen(sec){
+  sec.querySelectorAll(".replay").forEach(el => { el.classList.remove("play"); void el.getBoundingClientRect(); el.classList.add("play"); });
+  if (!live){ sec.classList.remove("css-enter"); void sec.offsetWidth; sec.classList.add("css-enter"); return; }
+  const first = !enterScreen.seen; enterScreen.seen = true;
+  MO.animate([...sec.children], first ? {y:[28,0]} : {opacity:[0,1], y:[28,0]}, {delay:MO.stagger(.045), ...sp(420,32)});
+  const art = sec.querySelector(".art > svg:not(.sticker)");
+  if (art) MO.animate(art, {scale:[.84,1], rotate:[-4,0]}, {delay:.06, ...sp(260,13)});
+  const st = sec.querySelector(".sticker");
+  if (st) MO.animate(st, first ? {rotate:[-120,0]} : {scale:[0,1], rotate:[-120,0]}, {delay:.45, ...sp(260,11)});
+  revealLetters(sec, first);
+}
+function fitIntro(){
+  const sc = $("scroller"), inShell = getComputedStyle(sc).position === "absolute";
+  const h = inShell ? sc.clientHeight : innerHeight;
+  const dock = document.querySelector(".dock-in").offsetHeight + (inShell ? 12 : 10);
+  const pad = parseFloat(getComputedStyle($("screen")).paddingTop) || 0;
+  const avail = Math.max(360, h - dock - pad - 20);
+  document.documentElement.style.setProperty("--fitH", avail + "px");
+  const w = $("screen").clientWidth, h1 = document.querySelector('[data-view="intro"] h1');
+  h1.style.fontSize = Math.round(Math.min(86, w * .185, avail * .125)) + "px";
+  document.querySelector('[data-view="intro"]').classList.toggle("short", avail < 470);
+}
+addEventListener("resize", fitIntro);
+function movePill(){
+  const sel = document.querySelector('.tabbar button[aria-selected="true"]:not([hidden])'), p = $("tab-pill");
+  if (!sel) return;
+  const to = {left: sel.offsetLeft + "px", width: sel.offsetWidth + "px"};
+  if (live && p.dataset.ready) MO.animate(p, to, sp(460,36));
+  else { Object.assign(p.style, to); p.dataset.ready = 1; }
+}
+addEventListener("resize", () => { $("tab-pill").dataset.ready = ""; movePill(); });
+function haptic(){ try { if (navigator.vibrate && navigator.userActivation && navigator.userActivation.hasBeenActive) navigator.vibrate(8); } catch(e){} }
+// ---------- particles (canvas) ----------
+const FX = (() => {
+  const cv = $("fxc"), cx = cv.getContext("2d"), tv = $("fxt"), tx = tv.getContext("2d");
+  let W = 0, H = 0, dpr = 1, amb = [], bits = [], ink = "255,255,255", raf = 0;
+  function size(){ dpr = Math.min(2, devicePixelRatio || 1); W = cv.clientWidth || innerWidth; H = cv.clientHeight || innerHeight; cv.width = tv.width = W*dpr; cv.height = tv.height = H*dpr; cx.setTransform(dpr,0,0,dpr,0,0); tx.setTransform(dpr,0,0,dpr,0,0); }
+  function seed(){ amb = Array.from({length: Math.round(Math.min(34, W/12))}, () => ({x:Math.random()*W, y:Math.random()*H, r:1+Math.random()*2.6, vy:-(.12+Math.random()*.35), vx:(Math.random()-.5)*.15, ph:Math.random()*6.28, star:Math.random() < .22})); }
+  function tint(){ const c = getComputedStyle(document.body).color.match(/\d+/g); if (c) ink = c.slice(0,3).join(","); }
+  function star(x, y, r, rot, g = cx){ g.save(); g.translate(x,y); g.rotate(rot); g.beginPath(); for (let i = 0; i < 8; i++){ const rr = i % 2 ? r*.38 : r; const a = i*Math.PI/4; g.lineTo(Math.cos(a)*rr, Math.sin(a)*rr); } g.closePath(); g.fill(); g.restore(); }
+  function frame(t){
+    cx.clearRect(0,0,W,H);
+    for (const p of amb){
+      if (!RM){ p.y += p.vy; p.x += p.vx + Math.sin(t/1800 + p.ph)*.12; if (p.y < -10){ p.y = H + 10; p.x = Math.random()*W; } }
+      const a = .1 + .16*(.5 + .5*Math.sin(t/700 + p.ph));
+      cx.fillStyle = `rgba(${ink},${a})`;
+      if (p.star) star(p.x, p.y, p.r*2.4, t/2000 + p.ph); else { cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, 6.283); cx.fill(); }
+    }
+    tx.clearRect(0,0,W,H);
+    for (let i = bits.length - 1; i >= 0; i--){
+      const b = bits[i]; b.life -= 1; b.vy += b.g; b.vx *= b.drag; b.vy *= b.drag; b.x += b.vx; b.y += b.vy; b.rot += b.vr; b.flip += .14;
+      if (b.life <= 0 || b.y > H + 40){ bits.splice(i,1); continue; }
+      tx.globalAlpha = Math.min(1, b.life / 30); tx.fillStyle = b.c; tx.strokeStyle = b.c;
+      if (b.k === "star"){ star(b.x, b.y, b.s, b.rot, tx); tx.globalAlpha = 1; continue; }
+      tx.save(); tx.translate(b.x, b.y); tx.rotate(b.rot);
+      if (b.k === "rect"){ tx.scale(1, Math.cos(b.flip)); tx.fillRect(-b.s/2, -b.s*.7, b.s, b.s*1.4); }
+      else if (b.k === "dot"){ tx.beginPath(); tx.arc(0,0,b.s*.55,0,6.283); tx.fill(); }
+      else { tx.lineWidth = 2.6; tx.lineCap = "round"; tx.beginPath(); tx.moveTo(-b.s,0); tx.quadraticCurveTo(-b.s/2,-b.s*.8,0,0); tx.quadraticCurveTo(b.s/2,b.s*.8,b.s,0); tx.stroke(); }
+      tx.restore(); tx.globalAlpha = 1;
+    }
+    raf = requestAnimationFrame(frame);
+  }
+  function burst(x, y, n, opt = {}){
+    if (RM) return;
+    const o = cv.getBoundingClientRect(); x -= o.left; y -= o.top;
+    const cols = opt.colors || ["#1C3FD8","#D52A1E","#E9A61C","#D9EE57","#FFFFFF","#0E1A13"];
+    const kinds = opt.kinds || ["rect","rect","dot","star","squig"];
+    for (let i = 0; i < n; i++){
+      const a = (opt.angle ?? -Math.PI/2) + (Math.random()-.5) * (opt.spread ?? Math.PI*1.6);
+      const v = (opt.speed ?? 9) * (.45 + Math.random()*.75);
+      bits.push({x, y, vx:Math.cos(a)*v, vy:Math.sin(a)*v, g:opt.gravity ?? .32, drag:opt.drag ?? .985, rot:Math.random()*6, vr:(Math.random()-.5)*.35, flip:Math.random()*6,
+        s:(opt.size ?? 9)*(.6 + Math.random()*.7), c:cols[(Math.random()*cols.length)|0], k:kinds[(Math.random()*kinds.length)|0], life:(opt.life ?? 150)*(.7 + Math.random()*.5)});
+    }
+  }
+  size(); seed(); tint(); raf = requestAnimationFrame(frame);
+  addEventListener("resize", () => { size(); seed(); });
+  return {burst, tint};
+})();
+function burstFrom(el, n, opt){ if (!el) return; const r = el.getBoundingClientRect(); FX.burst(r.left + r.width/2, r.top + r.height/2, n, opt); }
+
+function celebrate(){
+  fx(document.querySelector("#idcard .idcard"), {y:[180,0], rotate:[-14,0], scale:[.65,1], opacity:[0,1]}, sp(200,15));
+  fx(document.querySelector("#idcard .stamp"), {scale:[2.6,1], opacity:[0,1], rotate:[50,14]}, {delay:.6, ...sp(380,16)});
+  const card = document.querySelector("#idcard");
+  setTimeout(() => {
+    burstFrom(card, 90, {speed:14, spread:Math.PI*1.2, size:10, life:190});
+    const o = $("fxc").getBoundingClientRect();
+    FX.burst(o.left, o.top + o.height*.7, 45, {angle:-Math.PI/3, spread:.7, speed:18, size:9});
+    FX.burst(o.right, o.top + o.height*.7, 45, {angle:-Math.PI*2/3, spread:.7, speed:18, size:9});
+  }, 120);
+  setTimeout(() => { const st = document.querySelector("#idcard .stamp"); burstFrom(st, 22, {colors:["#FFFFFF","#E2402D","#D9EE57"], kinds:["star","dot"], speed:6, gravity:.05, size:6, life:70}); }, 820);
+  haptic();
+}
+
+// ---------- split headlines into letters (Framer-style text reveal) ----------
+function splitHead(h){
+  if (!h || h.dataset.split) return; h.dataset.split = 1;
+  [...h.childNodes].forEach(n => {
+    if (n.nodeType !== 3) return;
+    const frag = document.createDocumentFragment();
+    n.textContent.split(/(\s+)/).forEach(part => {
+      if (!part) return;
+      if (/^\s+$/.test(part)){ frag.appendChild(document.createTextNode(" ")); return; }
+      const w = document.createElement("span"); w.className = "w";
+      [...part].forEach(c => { const sEl = document.createElement("span"); sEl.className = "ch"; sEl.textContent = c; w.appendChild(sEl); });
+      frag.appendChild(w);
+    });
+    n.replaceWith(frag);
+  });
+}
+document.querySelectorAll("h1.giant, h2.giant").forEach(h => { if (!h.querySelector("#st-total")) splitHead(h); });
+function revealLetters(sec, first){
+  if (!live) return;
+  const L = sec.querySelectorAll(".giant .ch"); if (!L.length) return;
+  MO.animate(L, first ? {y:["0.5em",0], rotate:[12,0]} : {y:["0.7em",0], rotate:[14,0], opacity:[0,1]}, {delay:MO.stagger(.014, {startDelay:.04}), ...sp(560,26)});
+}
+
+// ---------- 3D tilt for the member card ----------
+function tiltCard(){
+  const wrap = $("idcard"), card = wrap.querySelector(".idcard"); if (!card || !live) return;
+  const move = e => {
+    const r = card.getBoundingClientRect(), px = (e.clientX - r.left)/r.width - .5, py = (e.clientY - r.top)/r.height - .5;
+    MO.animate(card, {rotateY: px*16, rotateX: -py*14}, sp(260,20));
+    card.style.setProperty("--sx", (120 - (px + .5)*160) + "%");
+  };
+  wrap.onpointermove = move; wrap.onpointerdown = move;
+  wrap.onpointerleave = () => MO.animate(card, {rotateY:0, rotateX:0}, sp(200,14));
+}
+
+// ---------- chips ----------
+const DROP = '<svg viewBox="0 0 16 20" aria-hidden="true"><path d="M8 1.5S2 8.4 2 12.4a6 6 0 0 0 12 0C14 8.4 8 1.5 8 1.5z"/></svg>';
+function chips(el, list, key){
+  if (key === "blood"){
+    const order = ["A+","B+","O+","AB+","A−","B−","O−","AB−"];
+    el.innerHTML = order.map(v => { const t = v.slice(0,-1), sg = v.slice(-1), pos = sg === "+";
+      return `<button type="button" class="chip" data-v="${v}" aria-pressed="false" aria-label="${t} ${pos ? "positive" : "negative"}"><span class="bt">${DROP}<b>${t}<sup>${sg}</sup></b></span><small>${pos ? "Positive" : "Negative"}</small></button>`; }).join("");
+  } else
+  el.innerHTML = list.map(item => { const [v,sub] = Array.isArray(item) ? item : [item];
+    return `<button type="button" class="chip" data-v="${v}" aria-pressed="false">${v}${sub?`<small>${sub}″</small>`:""}</button>`; }).join("");
+  el.querySelectorAll(".chip").forEach(b => b.onclick = () => {
+    state[key] = b.dataset.v; refreshChips(); clearErr("f-" + key); saveDraft(); haptic();
+    const a = fx(b, {scale:[.8,1.04]}, sp(700,13));
+    burstFrom(b, 12, {kinds:["star","dot"], speed:5.5, gravity:.08, size:5, life:46, colors: key === "blood" ? ["#E2402D","#FFFFFF","#0E1A13"] : ["#FFFFFF","#D9EE57","#FFD23F"]});
+    a && a.then && a.then(() => { b.style.transform = ""; });
+    if (key === "blood") fx($("drop-art"), {scale:[.9,1], rotate:[-5,0]}, sp(520,10));
+    if (key === "tee" || key === "lower"){ const g = $(key === "tee" ? "tee-g" : "low-g"); g.classList.remove("jig"); void g.getBoundingClientRect(); g.classList.add("jig"); }
+  });
+}
+function refreshChips(){
+  ["blood","tee","lower"].forEach(k => $(k).querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c.dataset.v === state[k])));
+  $("drop-label").textContent = state.blood || "?";
+  const bn = $("bnote"), bg = state.blood;
+  const NOTE = {"O−":"<b>Universal donor.</b> O negative red cells can be given to anyone in an emergency.",
+                "AB+":"<b>Universal recipient.</b> AB positive can receive red cells from every group."};
+  bn.classList.toggle("hl", !!NOTE[bg]);
+  bn.innerHTML = NOTE[bg] || (bg ? `Saved as <b>${bg}</b>. Only the organisers can see it.` : "Tap your group. Only the organisers can see it.");
+  $("tee-tag").textContent = state.tee || "?"; $("low-tag").textContent = state.lower || "?";
+  $("tee-g").style.scale = SCALE[state.tee] || .94; $("low-g").style.scale = SCALE[state.lower] || .94;
+}
+chips($("blood"), BLOOD, "blood"); chips($("tee"), TEE, "tee"); chips($("lower"), LOWER, "lower");
+
+// ---------- fields ----------
+["name","father","dob","email","address","dom"].forEach(k => $(k).addEventListener("input", () => { state[k] = $(k).value; clearErr("f-" + k); saveDraft(); }));
+$("cell").addEventListener("input", () => {
+  const d = $("cell").value.replace(/\D/g,"").slice(0,10);
+  $("cell").value = d.length > 5 ? d.slice(0,5) + " " + d.slice(5) : d;
+  state.cell = d; clearErr("f-cell"); saveDraft();
+});
+$("single").addEventListener("change", () => {
+  state.single = $("single").checked; $("dom").disabled = state.single;
+  if (state.single){ $("dom").value = ""; state.dom = ""; }
+  clearErr("f-dom"); saveDraft();
+});
+
+// ---------- photo ----------
+const MAX = 10 * 1024 * 1024;
+function handleFile(file){
+  if (!file) return;
+  if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return setErr("f-photo","Choose a JPG, PNG or WebP photo. iPhone HEIC photos: share them as JPG first.");
+  if (file.size > MAX) return setErr("f-photo",`This photo is ${(file.size/1048576).toFixed(1)} MB. Choose one under 10 MB.`);
+  const url = URL.createObjectURL(file), img = new Image();
+  img.onload = () => {
+    const s = Math.min(1, 520 / Math.max(img.width, img.height));
+    const c = document.createElement("canvas"); c.width = Math.round(img.width*s); c.height = Math.round(img.height*s);
+    c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+    let q = .82, out = c.toDataURL("image/jpeg", q);
+    while (out.length > 180000 && q > .4){ q -= .1; out = c.toDataURL("image/jpeg", q); }
+    URL.revokeObjectURL(url);
+    state.photo = out; showPhoto(true); clearErr("f-photo"); saveDraft();
+    $("drop-h").textContent = `${file.name} · ${file.size < 1048576 ? Math.max(1, Math.round(file.size/1024)) + " KB" : (file.size/1048576).toFixed(1) + " MB"}`;
+  };
+  img.onerror = () => setErr("f-photo","That file couldn't be opened as a photo. Try another one.");
+  img.src = url;
+}
+function showPhoto(fresh){
+  if (!state.photo) return;
+  $("frame").innerHTML = `<img alt="Your photo" src="${state.photo}">`;
+  $("drop").classList.add("has-photo"); $("vf-ok").hidden = false; $("drop-t").textContent = "Change";
+  if (fresh){
+    fx($("frame"), {scale:[.82,1], opacity:[.3,1]}, sp(320,16));
+    fx($("vf-ok"), {scale:[0,1]}, {delay:.2, ...sp(500,14)});
+    burstFrom($("drop"), 26, {kinds:["star","dot"], colors:["#D9EE57","#FFFFFF","#FFD23F"], speed:7, gravity:.1, size:6, life:60});
+  }
+}
+["photo","photo-cam"].forEach(id => $(id).addEventListener("change", e => { handleFile(e.target.files[0]); e.target.value = ""; }));
+const drop = $("drop");
+drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("over"); });
+drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+drop.addEventListener("drop", e => { e.preventDefault(); drop.classList.remove("over"); handleFile(e.dataTransfer.files[0]); });
+
+// ---------- validation ----------
+function setErr(fid, msg){ const f = $(fid); f.classList.add("bad"); f.querySelector(".err").textContent = msg; return false; }
+function clearErr(fid){ const f = $(fid); if (!f) return; f.classList.remove("bad"); f.querySelector(".err").textContent = ""; }
+function age(d){ const b = new Date(d), n = new Date(); let a = n.getFullYear()-b.getFullYear(); if (n < new Date(n.getFullYear(), b.getMonth(), b.getDate())) a--; return a; }
+function validate(s){
+  let ok = true;
+  const need = (fid, cond, msg) => { if (!cond){ setErr(fid, msg); ok = false; } };
+  if (s === 0){
+    need("f-name", state.name.trim().length >= 2, "Enter your full name.");
+    need("f-father", state.father.trim().length >= 2, "Enter your father's name.");
+    need("f-dob", state.dob && state.dob <= today && age(state.dob) < 110, "Choose your date of birth.");
+  }
+  if (s === 1){
+    need("f-cell", /^[6-9]\d{9}$/.test(state.cell), "Enter a 10-digit mobile number starting with 6, 7, 8 or 9.");
+    need("f-email", /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(state.email.trim()), "Enter a mail ID like name@gmail.com.");
+    need("f-address", state.address.trim().length >= 10, "Enter your full address with area and pincode.");
+  }
+  if (s === 2){
+    need("f-blood", !!state.blood, "Pick your blood group.");
+    const after = !state.dob || state.dom > state.dob;
+    need("f-dom", state.single || (state.dom && state.dom <= today && after), state.dom && !after ? "Date of marriage must be after date of birth." : "Choose your date of marriage, or tick Not married.");
+  }
+  if (s === 3){ need("f-tee", !!state.tee, "Pick a T-shirt size."); need("f-lower", !!state.lower, "Pick a lower size."); }
+  if (s === 4){ need("f-photo", !!state.photo, "Add a photo for your member card."); }
+  if (!ok){ const bad = document.querySelector(`[data-view="${s}"] .bad`); bad && bad.scrollIntoView({behavior:"smooth", block:"center"}); }
+  return ok;
+}
+
+// ---------- helpers ----------
+const fmtDate = d => d ? new Date(d + "T00:00").toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"}) : "—";
+const fmtCell = c => c ? "+91 " + c.slice(0,5) + " " + c.slice(5) : "—";
+const esc = s => String(s ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+const firstName = n => (n||"").replace(/^([A-Z]\.\s*)+/i,"").trim().split(/\s+/)[0] || "walker";
+const ICON = {
+  you:'<svg viewBox="0 0 20 20"><circle cx="10" cy="7" r="3.5" fill="currentColor"/><path d="M3.5 18c1-4 3.6-5.5 6.5-5.5s5.5 1.5 6.5 5.5z" fill="currentColor"/></svg>',
+  phone:'<svg viewBox="0 0 20 20"><rect x="5.5" y="2" width="9" height="16" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="15" r="1.2" fill="currentColor"/></svg>',
+  drop:'<svg viewBox="0 0 20 20"><path d="M10 2s-5.5 6-5.5 10a5.5 5.5 0 0 0 11 0C15.5 8 10 2 10 2z" fill="currentColor"/></svg>',
+  tee:'<svg viewBox="0 0 20 20"><path d="M7 2.5 2 5l2 4 2-1v9.5h8V8l2 1 2-4-5-2.5c-.5 1.5-1.6 2.3-3 2.3S7.5 4 7 2.5z" fill="currentColor"/></svg>',
+  cam:'<svg viewBox="0 0 20 20"><rect x="2" y="5.5" width="16" height="11.5" rx="3" fill="currentColor"/><rect x="7" y="3" width="6" height="3" rx="1" fill="currentColor"/><circle cx="10" cy="11" r="3" fill="#fff"/></svg>'
+};
+
+// ---------- review ----------
+function renderReview(){
+  const pencil = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13l1-3.5L10.5 3l2.5 2.5L6.5 12z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>';
+  const filled = [state.name.trim(), state.father.trim(), state.address.trim(), state.cell, state.dob, state.single || state.dom, state.email.trim(), state.blood, state.tee, state.lower, state.photo].filter(Boolean).length;
+  const C = 2 * Math.PI * 25, done = filled === 11;
+  const groups = [
+    {t:"About you", ic:"you", bg:"var(--red)", fg:"#fff", s:0, rows:[["Name", esc(state.name), 1], ["Father's name", esc(state.father)], ["Date of birth", fmtDate(state.dob)]]},
+    {t:"Contact", ic:"phone", bg:"var(--mustard)", fg:"var(--ink)", s:1, rows:[["Cell number", fmtCell(state.cell)], ["Mail ID", esc(state.email)], ["Address", esc(state.address), 1]]},
+    {t:"Family & health", ic:"drop", bg:"var(--lime)", fg:"var(--ink)", s:2, rows:[["Blood group", state.blood ? `<span class="rv-pill">${DROP}${esc(state.blood)}</span>` : "—"], ["Date of marriage", state.single ? "Not married" : fmtDate(state.dom)]]},
+    {t:"Club kit", ic:"tee", bg:"var(--cobalt)", fg:"#fff", s:3, rows:[["T-shirt", state.tee ? `<span class="rv-size">${esc(state.tee)}</span>` : "—"], ["Lower", state.lower ? `<span class="rv-size">${esc(state.lower)}</span>` : "—"]]}
+  ];
+  $("review").innerHTML = `
+    <div class="rv-hero">
+      <button type="button" class="rv-ph" data-go="4" aria-label="Change photo">${state.photo ? `<img alt="" src="${state.photo}">` : ICON.cam}</button>
+      <div class="rv-who"><small>Card preview</small><b>${esc(state.name || "Your name")}</b><span>${fmtCell(state.cell)}</span></div>
+      <div class="rv-ring" aria-label="${filled} of 11 details filled">
+        <svg viewBox="0 0 58 58"><circle cx="29" cy="29" r="25" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="5"/><circle id="rv-arc" cx="29" cy="29" r="25" fill="none" stroke="${done ? "var(--lime)" : "#FFD23F"}" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C * (1 - filled / 11)}"/></svg>
+        <div><b>${filled}/11</b><small>${done ? "Done" : "Filled"}</small></div>
+      </div>
+    </div>` + groups.map(g => `
+    <section class="rv-g">
+      <header><span class="rv-ic" style="background:${g.bg}; color:${g.fg}">${ICON[g.ic]}</span><b>${g.t}</b><button type="button" data-go="${g.s}">${pencil} Edit</button></header>
+      <dl>${g.rows.map(([k, v, wide]) => `<div${wide ? ' class="wide"' : ""}><dt>${k}</dt><dd>${v || "—"}</dd></div>`).join("")}</dl>
+    </section>`).join("");
+  $("review").querySelectorAll("[data-go]").forEach(b => b.onclick = () => show(+b.dataset.go));
+  const arc = $("rv-arc"); if (arc && live) fx(arc, {strokeDashoffset:[C, C * (1 - filled / 11)]}, {duration:1, ease:[.2,.9,.3,1], delay:.25});
+  if (live) MO.animate($("review").querySelectorAll(".rv-g"), {opacity:[0,1], y:[18,0]}, {delay:MO.stagger(.07, {startDelay:.2}), ...sp(380,28)});
+}
+$("confirm").addEventListener("change", () => { clearErr("f-confirm"); if ($("confirm").checked){ haptic(); burstFrom(document.querySelector(".rv-box"), 10, {kinds:["star","dot"], colors:["#0E1A13","#D9EE57","#E9A61C"], speed:4.5, gravity:.06, size:4.5, life:40}); } });
+
+// ---------- navigation ----------
+function show(v){
+  view = v;
+  document.querySelectorAll("[data-view]").forEach(el => el.hidden = el.dataset.view !== String(v));
+  $("form").hidden = typeof v !== "number";
+  document.body.dataset.s = v;
+  nativeBars();
+  const step = typeof v === "number";
+  if (step){
+    const segs = document.querySelectorAll(`[data-view="${v}"] .segs i`);
+    segs.forEach((i,n) => i.classList.toggle("on", n <= v));
+    fx(segs[v], {scaleX:[0,1]}, {duration:.55, ease:[.2,.9,.3,1], delay:.15});
+    if (v === LAST) renderReview();
+  }
+  $("ctarow").hidden = !(v === "intro" || step);
+  if (v === "intro") fitIntro();
+  $("next-t").textContent = v === "intro" ? (saved ? "Edit my registration" : "Start registration") : v === LAST ? (saved ? "Save changes" : "Submit registration") : "Continue";
+  const tabFor = v === "members" ? "tab-mem" : (v === "done" || v === "nocard") ? "tab-card" : "tab-reg";
+  ["tab-reg","tab-card","tab-mem"].forEach(t => $(t).setAttribute("aria-selected", t === tabFor));
+  movePill();
+  if (v === "members"){ renderMembers(); if (live) MO.animate(0, members.length, {duration:.9, ease:"easeOut", onUpdate:n => $("st-total").textContent = Math.round(n)}); }
+  enterScreen(document.querySelector(`[data-view="${v}"]`));
+  setTimeout(FX.tint, 520);
+  $("scroller").scrollTop = 0; window.scrollTo(0, 0);
+}
+$("next").addEventListener("pointerdown", () => fx($("next"), {scale:.95}, sp(700,30)));
+["pointerup","pointerleave"].forEach(e => $("next").addEventListener(e, () => fx($("next"), {scale:1}, sp(500,14))));
+$("next").addEventListener("click", () => burstFrom($("next"), 10, {kinds:["dot","star"], speed:5, gravity:.06, size:4.5, life:40, colors:["#FFFFFF","#D9EE57","#FFD23F"]}));
+$("next").onclick = () => {
+  if (view === "intro") return show(0);
+  if (view < LAST){ if (validate(view)) show(view + 1); }
+  else submit();
+};
+document.querySelectorAll(".back").forEach(b => b.onclick = () => show(view === 0 ? "intro" : view - 1));
+document.querySelector(".dock").addEventListener("pointerdown", () => { userNav = true; });
+$("tab-reg").onclick = () => show("intro");
+$("tab-card").onclick = () => show(saved || lastLocal ? "done" : "nocard");
+$("tab-mem").onclick = () => show("members");
+$("edit-again").onclick = () => { if (saved) fillForm(saved); show(0); };
+
+// ---------- draft ----------
+let draftT, lastLocal = null;
+function saveDraft(){ clearTimeout(draftT); draftT = setTimeout(() => { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(state)); } catch(e){} }, 400); }
+function fillForm(src){
+  Object.assign(state, src);
+  ["name","father","dob","email","address","dom"].forEach(k => $(k).value = state[k] || "");
+  const c = state.cell || ""; $("cell").value = c.length > 5 ? c.slice(0,5) + " " + c.slice(5) : c;
+  $("single").checked = !!state.single; $("dom").disabled = !!state.single;
+  refreshChips(); showPhoto();
+}
+try { const d = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null"); if (d) fillForm(d); } catch(e){}
+
+// ---------- card ----------
+function memberNo(id){ let h = 0; for (const ch of String(id || "local")) h = (h*31 + ch.charCodeAt(0)) >>> 0; return "WWC-26-" + String(h % 10000).padStart(4,"0"); }
+function renderCard(r, note){
+  const fnm = firstName(r.name), dh = $("done-h");
+  dh.innerHTML = `Welcome,<br>${esc(fnm)}`; delete dh.dataset.split; splitHead(dh);
+  const sw = $("screen").clientWidth - 40 || 330;
+  dh.style.fontSize = Math.round(Math.max(36, Math.min(86, sw / (Math.max(fnm.length + 1, 8) * .5)))) + "px";
+  $("idcard").innerHTML = `<div class="idcard">
+    <div class="ttl"><div class="club">Walkers Welfare Club<span lang="ta">செங்கல்பட்டு · 2026–27</span></div><span class="idno">${memberNo(r.id || uid)}</span></div>
+    <div class="idbody"><div class="idphoto">${r.photo ? `<img alt="" src="${r.photo}">` : ""}</div>
+      <div style="min-width:0"><div class="idname">${esc(r.name)}</div><div style="font-weight:600; opacity:.85; margin-top:6px; font-variant-numeric:tabular-nums">${fmtCell(r.cell)}</div></div></div>
+    <div class="idgrid"><div><b>${esc(r.blood)}</b><span>Blood group</span></div><div><b>${esc(r.tee)}</b><span>T-shirt</span></div><div><b>${esc(r.lower)}</b><span>Lower</span></div></div>
+  </div>
+  <svg class="stamp" viewBox="0 0 100 100" aria-hidden="true"><defs><path id="sp-c" d="M50 50 m-36 0 a36 36 0 1 1 72 0 a36 36 0 1 1 -72 0"/></defs>
+    <circle cx="50" cy="50" r="48" fill="var(--red)"/><circle cx="50" cy="50" r="27" fill="none" stroke="#fff" stroke-width="1.6" stroke-dasharray="3 3"/>
+    <g class="ring"><text font-family="Figtree, sans-serif" font-weight="800" font-size="8.6" fill="#fff"><textPath href="#sp-c" textLength="224" lengthAdjust="spacing">OFFICIAL MEMBER • SEASON 2026–27 • </textPath></text></g>
+    <text x="50" y="59" text-anchor="middle" font-family="Anton, Impact, sans-serif" font-size="21" fill="#fff">WWC</text></svg>`;
+  $("done-note").hidden = !note; $("done-note").textContent = note || "";
+  tiltCard();
+}
+
+// ---------- submit ----------
+async function submit(){
+  for (let s = 0; s < LAST; s++) if (!validate(s)){ show(s); setTimeout(() => validate(s), 60); return; }
+  if (!$("confirm").checked){ setErr("f-confirm", "Tick the box to confirm your details."); $("f-confirm").scrollIntoView({behavior:"smooth", block:"center"}); fx(document.querySelector(".rv-confirm"), {x:[0,-8,8,-5,5,0]}, {duration:.4}); return; }
+  const now = new Date().toISOString();
+  const rec = {...state, name:state.name.trim(), father:state.father.trim(), email:state.email.trim(), address:state.address.trim(), season:"2026-27", updatedAt:now, createdAt:saved?.createdAt || now};
+  const btn = $("next"); btn.disabled = true; $("next-t").textContent = "Saving…";
+  try {
+    if (NATIVE){
+      rec.id = saved?.id || ("m" + Date.now().toString(36));
+      const i = members.findIndex(m => m.id === rec.id);
+      if (i >= 0) members[i] = {...members[i], ...rec}; else members.push(rec);
+      if (!nativeSave()) throw {code:"device"};
+      saved = rec; try { localStorage.removeItem(DRAFT_KEY); localStorage.setItem(CURRENT_KEY, rec.id); } catch(e){}
+      renderCard(rec); show("done"); celebrate(); toast("Saved on this phone");
+    } else if (db && uid){
+      await db.doc("registrations/" + uid).set(rec);
+      saved = rec; try { localStorage.removeItem(DRAFT_KEY); } catch(e){}
+      renderCard(rec); show("done"); celebrate(); toast("Registration saved");
+    } else {
+      lastLocal = rec; renderCard(rec, "Preview only: this card was made on this device and has not reached the club. Open the app signed in to claude.ai to send it.");
+      show("done"); celebrate();
+    }
+  } catch(e){
+    toast(e?.code === "device" ? "Couldn't save on this phone. Check free storage and try again." : e?.code === "quota_exceeded" ? "The club register is full. Tell the club secretary." : e?.code === "invalid_argument" ? "This link lets you view, not register. Ask the club for access." : "Couldn't save. Check your connection and try again.");
+  } finally { btn.disabled = false; if (typeof view === "number") $("next-t").textContent = saved ? "Save changes" : "Submit registration"; }
+}
+
+let toastT;
+function toast(msg){ const t = $("toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 2800); }
+
+// ---------- members ----------
+const ICOPY = '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
+let memSort = "new", memFilter = "all";
+const ageOf = d => { if (!d) return null; const b = new Date(d), n = new Date(); let a = n.getFullYear() - b.getFullYear(); if (n < new Date(n.getFullYear(), b.getMonth(), b.getDate())) a--; return a; };
+function ago(iso){
+  const t = Date.parse(iso); if (!t) return "";
+  const m = Math.round((Date.now() - t) / 60000);
+  if (m < 1) return "just now"; if (m < 60) return m + "m ago";
+  const h = Math.round(m / 60); if (h < 24) return h + "h ago";
+  const d = Math.round(h / 24); return d < 30 ? d + "d ago" : fmtDate(iso.slice(0,10));
+}
+function copyText(txt, okMsg){
+  if (NATIVE){ try { NATIVE.copy(txt); toast(okMsg); } catch(e){ toast("Couldn't copy."); } return; }
+  navigator.clipboard.writeText(txt).then(() => toast(okMsg), () => toast("Copy isn't allowed here."));
+}
+function renderBars(){
+  const keys = (barMode === "tee" ? TEE : LOWER).map(x => x[0]);
+  const counts = keys.map(k => members.filter(m => m[barMode] === k).length);
+  const max = Math.max(1, ...counts), total = counts.reduce((a, b) => a + b, 0);
+  $("bars").innerHTML = keys.map((k,i) => `<div class="bar${counts[i] === max && counts[i] > 0 ? " top" : ""}"><em>${counts[i]}</em><i style="height:${Math.max(4, counts[i]/max*100)}%"></i><span>${k}</span></div>`).join("");
+  if (live) MO.animate($("bars").querySelectorAll("i"), {scaleY:[0,1]}, {delay:MO.stagger(.05), ...sp(300,18)});
+  const top = keys[counts.indexOf(Math.max(...counts))];
+  $("kit-sum").innerHTML = total ? `<b>${total}</b> ${barMode === "tee" ? "T-shirts" : "lowers"} · most ordered <b>${top}</b>` : "No orders yet";
+}
+$("seg-tee").onclick = () => { barMode = "tee"; $("seg-tee").setAttribute("aria-pressed", true); $("seg-low").setAttribute("aria-pressed", false); renderBars(); };
+$("seg-low").onclick = () => { barMode = "lower"; $("seg-low").setAttribute("aria-pressed", true); $("seg-tee").setAttribute("aria-pressed", false); renderBars(); };
+$("copy-kit").onclick = () => {
+  const line = (label, key, list) => label + ": " + list.map(([k]) => `${k} ${members.filter(m => m[key] === k).length}`).join(", ");
+  copyText(`Walkers Welfare Club · kit order 2026–27\n${line("T-shirts", "tee", TEE)}\n${line("Lowers", "lower", LOWER)}`, "Kit order copied");
+};
+function renderSpark(){
+  const days = 14, day = 864e5, start = new Date(); start.setHours(0,0,0,0);
+  const counts = Array.from({length: days}, (_, i) => { const end = start.getTime() - (days - 2 - i) * day; return members.filter(m => (Date.parse(m.createdAt) || 0) < end).length; });
+  const lo = Math.min(...counts), max = Math.max(lo + 1, ...counts), W = 140, H = 56, pad = 6;
+  const pts = counts.map((c, i) => [i * (W / (days - 1)), H - pad - ((c - lo) / (max - lo)) * (H - pad * 2)]);
+  const line = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+  const last = pts[pts.length - 1];
+  $("m-spark").innerHTML = `<path d="${line} L${W} ${H} L0 ${H}Z" fill="rgba(217,238,87,.14)"/><path d="${line}" fill="none" stroke="var(--lime)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${last[0]}" cy="${last[1]}" r="4" fill="var(--lime)" stroke="var(--coal)" stroke-width="2"/>`;
+}
+function renderMembers(){
+  const n = members.length, wk = Date.now() - 7*864e5;
+  $("st-total").textContent = n; $("m-n").textContent = n;
+  $("st-week").textContent = "+" + members.filter(m => Date.parse(m.createdAt) > wk).length;
+  const ph = members.filter(m => m.photo).length;
+  $("st-photo").textContent = `${ph}/${n}`; $("st-photo-bar").style.width = (n ? ph / n * 100 : 0) + "%";
+  const ages = members.map(m => ageOf(m.dob)).filter(a => a != null && a > 0 && a < 110);
+  $("st-age").textContent = ages.length ? Math.round(ages.reduce((a, b) => a + b, 0) / ages.length) : "—";
+  renderSpark(); renderBars();
+  const order = ["A+","B+","O+","AB+","A−","B−","O−","AB−"];
+  $("bloods").innerHTML = order.map(b => { const c = members.filter(m => m.blood === b).length;
+    return `<div class="${c ? "has" : ""}"><span class="bt">${DROP}<b>${b.slice(0,-1)}<sup>${b.slice(-1)}</sup></b></span><span>${c}</span></div>`; }).join("");
+  const donors = members.filter(m => m.blood === "O−").length;
+  $("st-donor").textContent = donors ? `${donors} O− universal donor${donors > 1 ? "s" : ""}` : "";
+  if (!n){ $("mlist").innerHTML = `<div class="empty"><svg viewBox="0 0 200 110" aria-hidden="true"><path d="M20 100 Q18 108 30 108 H110 Q120 108 118 100 L117 96 H21Z" fill="#fff" opacity=".9"/><path d="M22 96 C20 80 27 64 44 58 L66 52 C71 63 82 68 93 69 C104 71 112 78 117 96Z" fill="var(--lime)"/><path d="M84 92 Q82 100 92 100 H176 Q186 100 184 92 L183 88 H85Z" fill="#fff" opacity=".9"/><path d="M86 88 C84 72 91 56 108 50 L130 44 C135 55 146 60 157 61 C168 63 176 70 183 88Z" fill="var(--lime)" opacity=".75"/></svg><b>No registrations yet</b><span>Share this app with club members. Each one registers on their own phone and shows up here.</span></div>`; return; }
+  const q = $("q").value.trim().toLowerCase();
+  let list = members.filter(m => !q || [m.name,m.father,m.cell,m.address,m.email].join(" ").toLowerCase().includes(q));
+  if (memFilter === "week") list = list.filter(m => Date.parse(m.createdAt) > wk);
+  if (memFilter === "nophoto") list = list.filter(m => !m.photo);
+  if (memFilter === "neg") list = list.filter(m => (m.blood || "").endsWith("−"));
+  list = [...list].sort(memSort === "az" ? (a, b) => (a.name || "").localeCompare(b.name || "") : (a, b) => (Date.parse(b.createdAt) || 0) - (Date.parse(a.createdAt) || 0));
+  $("mlist").innerHTML = list.map(m => `<details class="mrow" data-id="${esc(m.id)}"><summary><div class="av">${m.photo ? `<img alt="" src="${m.photo}">` : esc((m.name||"?").replace(/^([A-Z]\.\s*)+/i,"")[0] || "?")}</div><div class="who"><b>${esc(m.name)}</b><span>${fmtCell(m.cell)} · ${ago(m.createdAt)}</span></div><span class="m-tags"><span class="bp">${esc(m.blood)}</span><span class="kt">${esc(m.tee)}</span></span></summary>
+    <dl><dt>Father's name</dt><dd>${esc(m.father)}</dd><dt>Born</dt><dd>${fmtDate(m.dob)}${ageOf(m.dob) != null ? ` · ${ageOf(m.dob)} yrs` : ""}</dd><dt>Marriage</dt><dd>${m.single ? "Not married" : fmtDate(m.dom)}</dd><dt>Mail ID</dt><dd>${esc(m.email)}</dd><dt>Address</dt><dd>${esc(m.address)}</dd><dt>Kit</dt><dd>T-shirt ${esc(m.tee)} · Lower ${esc(m.lower)}</dd><dt>Registered</dt><dd>${fmtDate((m.createdAt||"").slice(0,10))}</dd></dl>
+    <div class="m-rowact"><button type="button" class="m-mini" data-copy="phone">${ICOPY} Copy phone</button><button type="button" class="m-mini" data-copy="all">${ICOPY} Copy details</button>${NATIVE ? '<button type="button" class="m-mini" data-edit="1">✎ Edit</button>' : ""}</div></details>`).join("") || `<div class="empty">No member matches${q ? ` “${esc(q)}”` : " this filter"}.</div>`;
+  $("mlist").querySelectorAll("[data-edit]").forEach(b => b.onclick = () => {
+    const m = members.find(x => x.id === b.closest(".mrow").dataset.id); if (!m) return;
+    saved = m; fillForm(m); try { localStorage.setItem(CURRENT_KEY, m.id); } catch(e){}
+    renderCard(m); show(0);
+  });
+  $("mlist").querySelectorAll("[data-copy]").forEach(b => b.onclick = () => {
+    const m = members.find(x => x.id === b.closest(".mrow").dataset.id); if (!m) return;
+    if (b.dataset.copy === "phone") return copyText("+91 " + m.cell, "Phone number copied");
+    copyText([m.name, "Father: " + m.father, "Phone: +91 " + m.cell, "Mail: " + m.email, "Address: " + m.address, "Blood group: " + m.blood, `Kit: T-shirt ${m.tee}, Lower ${m.lower}`].join("\n"), "Member details copied");
+  });
+}
+document.querySelectorAll(".m-f").forEach(b => b.onclick = () => { memFilter = b.dataset.f; document.querySelectorAll(".m-f").forEach(x => x.setAttribute("aria-pressed", x === b)); renderMembers(); });
+$("sort-new").onclick = () => { memSort = "new"; $("sort-new").setAttribute("aria-pressed", true); $("sort-az").setAttribute("aria-pressed", false); renderMembers(); };
+$("sort-az").onclick = () => { memSort = "az"; $("sort-az").setAttribute("aria-pressed", true); $("sort-new").setAttribute("aria-pressed", false); renderMembers(); };
+$("q").addEventListener("input", renderMembers);
+function csv(){
+  const cols = [["Name","name"],["Father's name","father"],["Address","address"],["Cell number","cell"],["Date of birth","dob"],["Date of marriage","dom"],["Mail ID","email"],["Blood group","blood"],["T-shirt size","tee"],["Lower size","lower"],["Photo","photo"],["Registered on","createdAt"]];
+  const cell = v => `"${String(v ?? "").replace(/"/g,'""')}"`;
+  return [cols.map(c => cell(c[0])).join(",")].concat(members.map(m => cols.map(([,k]) =>
+    cell(k === "photo" ? (m.photo ? "Yes" : "No") : k === "dom" && m.single ? "Not married" : k === "createdAt" ? (m.createdAt||"").slice(0,10) : m[k])).join(","))).join("\r\n");
+}
+$("dl-csv").onclick = async () => {
+  if (NATIVE){ try { NATIVE.share("walkers-club-members-2026-27.csv", "\uFEFF" + csv()); } catch(e){ toast("Couldn't prepare the file."); } return; }
+  const dl = window.claude?.use ? await claude.use("downloads") : null;
+  if (!dl) return toast("Download isn't available here. Use Copy for Excel.");
+  try { await dl.save({filename:"walkers-club-members-2026-27.csv", data:"﻿" + csv()}); } catch(e){ if (e?.code !== "declined") toast("Couldn't prepare the file."); }
+};
+$("copy-csv").onclick = () => {
+  if (NATIVE) return copyText(csv().replace(/","/g, '"\t"'), "Copied. Paste into Excel or Google Sheets.");
+  navigator.clipboard.writeText(csv().replace(/","/g, '"\t"')).then(() => toast("Copied. Paste into Excel or Google Sheets."), () => toast("Copy isn't allowed here. Use Download CSV."));
+};
+
+// ---------- phone app (Android APK) mode ----------
+const NATIVE = window.WWCNative || null;
+const CURRENT_KEY = "wwc-current-id";
+function nativeSave(){ try { NATIVE.save(JSON.stringify(members)); return true; } catch(e){ return false; } }
+function nativeBars(){
+  if (!NATIVE) return;
+  const cs = getComputedStyle(document.body), bg = cs.getPropertyValue("--bg").trim(), fg = cs.getPropertyValue("--fg").trim();
+  const dark = /^#(0|1)/i.test(fg) || fg.toLowerCase() === "var(--ink)";
+  try { NATIVE.bars(bg.startsWith("#") ? bg : "#1C3FD8", dark); } catch(e){}
+}
+window.wwcBack = () => {
+  if (typeof view === "number"){ show(view === 0 ? "intro" : view - 1); return true; }
+  if (view !== "intro"){ show("intro"); return true; }
+  return false;
+};
+function startNewMember(){
+  saved = null; lastLocal = null;
+  Object.assign(state, {name:"",father:"",dob:"",cell:"",email:"",address:"",dom:"",single:false,blood:"",tee:"",lower:"",photo:""});
+  fillForm(state);
+  $("frame").innerHTML = '<svg class="vf-guide" viewBox="0 0 200 200" aria-hidden="true"><ellipse cx="100" cy="88" rx="44" ry="56" fill="none" stroke="#fff" stroke-width="2.6" stroke-dasharray="6 7" opacity=".65"/><path d="M34 204 C42 164 68 148 100 148 S158 164 166 204" fill="none" stroke="#fff" stroke-width="2.6" stroke-dasharray="6 7" opacity=".65"/></svg><span class="vf-hint">Your face here</span>';
+  $("drop").classList.remove("has-photo"); $("vf-ok").hidden = true; $("drop-t").textContent = "Gallery";
+  $("drop-h").textContent = "JPG, PNG or WebP · up to 10 MB";
+  $("confirm").checked = false;
+  try { localStorage.removeItem(DRAFT_KEY); localStorage.removeItem(CURRENT_KEY); } catch(e){}
+  show(0);
+}
+if (NATIVE){
+  try { members = JSON.parse(NATIVE.load() || "[]"); } catch(e){ members = []; }
+  isAdmin = true; $("tab-mem").hidden = false; $("new-member").hidden = false;
+  $("new-member").onclick = startNewMember;
+  let cur = null; try { cur = localStorage.getItem(CURRENT_KEY); } catch(e){}
+  const mine = members.find(m => m.id === cur);
+  if (mine){ saved = mine; fillForm(mine); renderCard(mine); }
+}
+
+// ---------- boot ----------
+fitIntro(); refreshChips(); show(NATIVE && saved ? "done" : "intro"); requestAnimationFrame(() => { fitIntro(); movePill(); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitIntro);
+(async () => {
+  if (!window.claude?.use) return;
+  const [dbNs, user] = await Promise.all([claude.use("db"), claude.use("user")]);
+  db = dbNs;
+  if (user){ uid = await user.id(); isAdmin = (await user.isOwner()) || (await user.canEdit()); }
+  if (!db || !uid) return;
+  try {
+    const snap = await db.doc("registrations/" + uid).get();
+    if (snap.exists){ saved = snap.data(); fillForm(saved); renderCard(saved); if (view === "intro" && !userNav) show("done"); else if (view === "intro") $("next-t").textContent = "Edit my registration"; }
+  } catch(e){}
+  if (isAdmin){
+    $("tab-mem").hidden = false; requestAnimationFrame(movePill);
+    db.collection("registrations").onSnapshot(qs => {
+      members = qs.docs.map(d => ({id:d.id, ...d.data()}));
+      if (view === "members") renderMembers();
+    }, () => {});
+  }
+})();
+})();
+</script>

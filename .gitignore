@@ -1,0 +1,10 @@
+# signing key: never publish it (keep a private backup; updates must be signed with it)
+*.keystore
+*.jks
+
+# build output and generated web bundle
+android/build/
+android/assets/
+*.idsig
+android/shot*.png
+android/phone_shot*.png
